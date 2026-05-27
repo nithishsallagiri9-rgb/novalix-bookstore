@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders | Novalix</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ══════════════════════════════════════════
+   BODY — library corridor / book delivery
+   ══════════════════════════════════════════ */
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background-color:#0e0a1a;
+  background-image:
+    linear-gradient(to bottom,
+      rgba(6,14,8,.55) 0%,
+      rgba(8,18,10,.42) 40%,
+      rgba(6,14,8,.52) 100%
+    ),
+    url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1920&q=80&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,rgba(14,8,30,.97),rgba(28,14,56,.97));
+  padding:18px 50px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 30px rgba(0,0,0,.6);
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid rgba(212,175,55,.3);
+  backdrop-filter:blur(14px);
+}
+header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.7),transparent);
+}
+.logo{font-family:'Playfair Display',serif;font-size:26px;color:white;letter-spacing:1px;text-decoration:none;}
+.logo span{color:#f5d76e;text-shadow:0 0 18px rgba(245,215,110,.5);}
+.header-right{display:flex;align-items:center;gap:15px;}
+.welcome-text{color:rgba(255,255,255,.75);font-size:13px;}
+.welcome-text b{color:#f5d76e;}
+.shop-btn{
+  background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);
+  color:white;padding:8px 20px;border-radius:30px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:.3s;text-decoration:none;
+}
+.shop-btn:hover{background:rgba(255,255,255,.2);border-color:rgba(212,175,55,.5);transform:translateY(-1px);}
+
+/* ── NAV ── */
+nav{
+  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
+  display:flex;justify-content:center;gap:0;
+  box-shadow:0 3px 20px rgba(0,0,0,.22);
+  border-bottom:2px solid rgba(212,175,55,.2);flex-wrap:wrap;
+}
+nav a{
+  text-decoration:none;color:#2a5298;font-weight:600;font-size:13px;
+  transition:.25s;padding:14px 28px;white-space:nowrap;position:relative;
+}
+nav a::after{content:'';position:absolute;bottom:0;left:50%;right:50%;height:2px;background:linear-gradient(90deg,#d4af37,#f5d76e);transition:.25s;}
+nav a:hover{color:#d4af37;}
+nav a:hover::after,nav a.active::after{left:10px;right:10px;}
+nav a.active{color:#d4af37;}
+
+/* ── PAGE TITLE ── */
+.page-title{
+  text-align:center;padding:44px 20px 20px;
+  position:relative;z-index:10;
+}
+.ornament{display:flex;align-items:center;gap:12px;max-width:280px;margin:0 auto 10px;}
+.orn-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.6),transparent);}
+.orn-diamond{color:#d4af37;font-size:10px;letter-spacing:4px;}
+.page-title h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4vw,42px);color:white;margin-bottom:8px;
+  text-shadow:0 3px 20px rgba(0,0,0,.5);
+}
+.page-title h2 span{
+  background:linear-gradient(135deg,#f5d76e,#d4af37);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.page-title p{color:rgba(255,255,255,.6);font-size:14px;font-style:italic;}
+
+/* ── STATS ROW — glass chips ── */
+.stats-row{
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
+  padding:0 50px 28px;max-width:900px;margin:0 auto;
+  position:relative;z-index:10;
+}
+.stat-card{
+  background:rgba(255,255,255,.12);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:18px;padding:18px 28px;text-align:center;
+  flex:1;min-width:120px;transition:.25s;
+}
+.stat-card:hover{background:rgba(255,255,255,.2);border-color:rgba(212,175,55,.4);transform:translateY(-3px);}
+.stat-card .stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#f5d76e;line-height:1;}
+.stat-card .stat-label{color:rgba(255,255,255,.6);font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-top:5px;font-weight:600;}
+
+/* ── FILTER TABS — glass pills ── */
+.filter-tabs{
+  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;
+  padding:0 50px 22px;position:relative;z-index:10;
+}
+.filter-tab{
+  padding:9px 20px;border-radius:30px;
+  border:1.5px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.1);backdrop-filter:blur(10px);
+  color:rgba(255,255,255,.8);font-size:13px;font-weight:600;
+  cursor:pointer;transition:.25s;font-family:'Poppins',sans-serif;
+}
+.filter-tab:hover{border-color:rgba(212,175,55,.5);color:#f5d76e;background:rgba(255,255,255,.15);}
+.filter-tab.active{
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border-color:#d4af37;
+  box-shadow:0 4px 16px rgba(212,175,55,.4);
+}
+
+/* ── CONTAINER ── */
+.container{
+  max-width:900px;margin:0 auto;
+  padding:0 50px 60px;
+  position:relative;z-index:10;
+}
+
+/* ── ORDER CARD — white glass ── */
+.order-card{
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(20px);
+  border-radius:20px;overflow:hidden;
+  margin-bottom:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,.45),0 0 0 1px rgba(212,175,55,.1);
+  transition:.32s;
+}
+.order-card:hover{
+  box-shadow:0 28px 70px rgba(0,0,0,.5),0 0 0 1px rgba(212,175,55,.3);
+  transform:translateY(-3px);
+}
+.order-card::before{
+  content:'';display:block;height:3px;
+  background:linear-gradient(90deg,#1e3c72,#2a5298,#d4af37,#f5d76e,#d4af37,#2a5298,#1e3c72);
+}
+
+.order-card-header{
+  padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:2px solid #f5f0e8;flex-wrap:wrap;gap:10px;
+}
+.order-left{display:flex;flex-direction:column;gap:4px;}
+.order-id{font-family:'Playfair Display',serif;font-size:17px;color:#1e3c72;font-weight:700;}
+.order-date{color:#aaa;font-size:12px;}
+.order-payment{color:#2a5298;font-size:12px;font-weight:600;background:#f0f4ff;padding:3px 10px;border-radius:20px;display:inline-block;margin-top:3px;}
+.order-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.order-total{font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;color:#d4af37;}
+.status-badge{padding:5px 14px;border-radius:30px;font-size:12px;font-weight:700;}
+.status-placed{background:#fff8e1;color:#f57c00;}
+.status-packed{background:#e3f2fd;color:#1565c0;}
+.status-shipped{background:#e8f5e9;color:#2e7d32;}
+.status-out{background:#fce4ec;color:#c62828;}
+.status-delivered{background:#e8f5e9;color:#1b5e20;}
+.status-cancelled{background:#fce4ec;color:#b71c1c;}
+.cancel-btn{
+  margin-top:12px;padding:8px 18px;
+  background:none;
+  color:#e53935;border:1.5px solid #e53935;border-radius:20px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Poppins',sans-serif;transition:.3s;
+}
+.cancel-btn:hover{background:#fff5f5;transform:translateY(-2px);}
+.reorder-btn{
+  margin-top:12px;padding:8px 18px;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  color:white;border:none;border-radius:20px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Poppins',sans-serif;transition:.3s;
+  box-shadow:0 4px 12px rgba(30,60,114,.3);
+}
+.reorder-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(30,60,114,.4);}
+.cancel-modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:2000;align-items:center;justify-content:center;}
+.cancel-modal-overlay.open{display:flex;}
+.cancel-modal{background:white;border-radius:24px;padding:36px;width:90%;max-width:380px;text-align:center;box-shadow:0 40px 80px rgba(0,0,0,.4);animation:modalIn .3s ease;}
+.cancel-modal h3{font-family:'Playfair Display',serif;font-size:22px;color:#b71c1c;margin-bottom:10px;}
+.cancel-modal p{color:#666;font-size:14px;margin-bottom:22px;line-height:1.7;}
+.cancel-modal-btns{display:flex;gap:10px;justify-content:center;}
+.btn-cancel-confirm{padding:12px 24px;background:linear-gradient(135deg,#e53935,#b71c1c);color:white;border:none;border-radius:30px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;transition:.3s;}
+.btn-cancel-back{padding:12px 24px;background:#f5f5f5;color:#666;border:none;border-radius:30px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;transition:.3s;}
+.btn-cancel-confirm:hover,.btn-cancel-back:hover{transform:translateY(-2px);}
+
+.order-card-body{padding:20px 24px;}
+
+/* tracking steps */
+.track-steps{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  position:relative;margin-bottom:20px;
+}
+.track-steps::before{content:'';position:absolute;top:18px;left:0;right:0;height:3px;background:#f0e4b8;z-index:0;}
+.track-step{text-align:center;z-index:1;flex:1;}
+.track-dot{
+  width:38px;height:38px;border-radius:50%;background:#f0e4b8;
+  margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;border:3px solid white;box-shadow:0 3px 10px rgba(0,0,0,.1);transition:.3s;
+}
+.track-step.done .track-dot{background:linear-gradient(135deg,#27ae60,#1e8449);box-shadow:0 4px 14px rgba(39,174,96,.3);}
+.track-step.active .track-dot{background:linear-gradient(135deg,#d4af37,#b8860b);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,.4);}50%{box-shadow:0 0 0 8px rgba(212,175,55,0);}}
+.track-step p{font-size:10px;color:#bbb;font-weight:600;text-transform:uppercase;letter-spacing:.3px;}
+.track-step.done p{color:#27ae60;}
+.track-step.active p{color:#d4af37;}
+
+/* items list */
+.order-items-list{background:#fffdf7;border:1px solid #f0e4b8;border-radius:12px;padding:14px 16px;}
+.order-item-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px solid #f5f0e8;}
+.order-item-row:last-child{border-bottom:none;}
+.order-item-name{color:#444;font-weight:500;display:flex;align-items:center;gap:6px;}
+.order-item-price{color:#d4af37;font-weight:700;font-family:'Poppins',sans-serif;font-size:13px;}
+
+/* address row */
+.order-address-row{
+  margin-top:12px;background:#f9f9f9;border:1px solid #f0e4b8;
+  border-radius:10px;padding:10px 14px;font-size:12px;color:#555;
+  display:flex;align-items:flex-start;gap:8px;line-height:1.6;
+}
+.order-address-row .addr-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+
+/* empty / loading */
+.empty-orders{text-align:center;padding:60px 20px;}
+.empty-orders .empty-icon{font-size:64px;margin-bottom:14px;opacity:.8;}
+.empty-orders h3{font-family:'Playfair Display',serif;font-size:24px;color:white;margin-bottom:8px;text-shadow:0 2px 10px rgba(0,0,0,.4);}
+.empty-orders p{color:rgba(255,255,255,.6);font-size:14px;margin-bottom:24px;}
+.shop-now-btn{
+  display:inline-block;padding:13px 30px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border-radius:30px;font-size:14px;font-weight:600;
+  text-decoration:none;transition:.3s;box-shadow:0 6px 20px rgba(212,175,55,.4);
+}
+.shop-now-btn:hover{box-shadow:0 10px 28px rgba(212,175,55,.55);transform:translateY(-2px);}
+
+.loading{text-align:center;padding:50px;color:rgba(255,255,255,.6);font-size:15px;}
+.loading-spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.15);border-top:4px solid #d4af37;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* footer strip */
+.page-footer{
+  margin:0 50px 44px;
+  background:rgba(12,6,26,.9);backdrop-filter:blur(16px);
+  border-radius:16px;padding:18px 36px;
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid rgba(212,175,55,.18);
+  box-shadow:0 10px 40px rgba(0,0,0,.4);
+  position:relative;z-index:10;flex-wrap:wrap;gap:10px;
+}
+.footer-brand{font-family:'Playfair Display',serif;font-size:18px;color:white;}
+.footer-brand span{color:#f5d76e;}
+.footer-links{display:flex;gap:18px;}
+.footer-links a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;transition:.2s;font-weight:500;}
+.footer-links a:hover{color:#f5d76e;}
+
+@media(max-width:768px){
+  header{padding:15px 20px;}
+  .stats-row,.filter-tabs,.container,.page-footer{padding-left:14px;padding-right:14px;margin-left:0;margin-right:0;}
+  .order-card-header{flex-direction:column;align-items:flex-start;}
+  .order-right{align-items:flex-start;}
+  nav a{padding:12px 16px;font-size:12px;}
+  .track-step p{font-size:9px;}
+}
+.profile-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#d4af37,#f5d76e);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  cursor:pointer;box-shadow:0 4px 15px rgba(212,175,55,.4);
+  border:2px solid rgba(255,255,255,.3);transition:.2s;flex-shrink:0;
+}
+.profile-avatar:hover{transform:scale(1.08);}
+#profileDropdown{
+  display:none;position:absolute;top:52px;right:0;background:white;
+  border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.2);padding:20px;
+  min-width:220px;border:2px solid #f0e4b8;z-index:999;
+  animation:dropIn .2s ease;
+}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">📚 Nova<span>lix</span></a>
+    <div class="header-right">
+    <div id="authButtons" style="display:flex;gap:8px;">
+      <a href="login.html" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:white;padding:7px 18px;border-radius:30px;font-size:13px;font-weight:600;text-decoration:none;">Login</a>
+      <a href="signup.html" style="background:linear-gradient(135deg,#d4af37,#f5d76e);color:#3a2000;padding:7px 18px;border-radius:30px;font-size:13px;font-weight:600;text-decoration:none;">Sign Up</a>
+    </div>
+    <div id="loggedInButtons" style="display:none;position:relative;align-items:center;gap:12px;">
+      <span style="color:rgba(255,255,255,.8);font-size:13px;">Welcome, <b style="color:#f5d76e;" id="headerUser"></b> 👋</span>
+      <div class="profile-avatar" onclick="toggleProfile()">👤</div>
+      <div id="profileDropdown">
+        <div style="text-align:center;margin-bottom:15px;padding-bottom:15px;border-bottom:2px solid #f5f0e8;">
+          <div style="font-size:36px;margin-bottom:8px;">👤</div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;color:#1e3c72;font-weight:700;" id="dropName"></div>
+          <div style="font-size:11px;color:#d4af37;font-weight:700;letter-spacing:1px;">✦ MEMBER</div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📧 Email</div>
+          <div style="font-size:13px;color:#444;font-weight:600;" id="dropEmail">Loading...</div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📦 Total Orders</div>
+          <div style="font-size:22px;font-weight:700;color:#d4af37;font-family:'Playfair Display',serif;" id="profileDropOrders">-</div>
+        </div>
+        <button onclick="logout()" style="width:100%;padding:10px;background:#fff0f0;color:#ff4d4d;border:2px solid #ffcccc;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <a href="index.html">🏠 Home</a>
+  <a href="books.html">📖 Books</a>
+  <a href="cart.html">🛒 Cart</a>
+  <a href="orders.html" class="active">📦 My Orders</a>
+  <a href="index.html#contact">📞 Contact</a>
+</nav>
+
+<div class="page-title">
+  <div class="ornament">
+    <div class="orn-line"></div>
+    <div class="orn-diamond">◆ ◆ ◆</div>
+    <div class="orn-line"></div>
+  </div>
+  <h2>My <span>Orders</span></h2>
+  <p>Track and manage all your orders</p>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-num" id="totalOrders">0</div>
+    <div class="stat-label">Total Orders</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="deliveredCount">0</div>
+    <div class="stat-label">Delivered</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="activeCount">0</div>
+    <div class="stat-label">Active</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="totalSpent">₹0</div>
+    <div class="stat-label">Total Spent</div>
+  </div>
+</div>
+
+<div class="filter-tabs">
+  <button class="filter-tab active" onclick="filterOrders('All',this)">📦 All Orders</button>
+  <button class="filter-tab" onclick="filterOrders('Order Placed',this)">📋 Placed</button>
+  <button class="filter-tab" onclick="filterOrders('Shipped',this)">🚚 Shipped</button>
+  <button class="filter-tab" onclick="filterOrders('Out for Delivery',this)">🛵 Out for Delivery</button>
+  <button class="filter-tab" onclick="filterOrders('Delivered',this)">✅ Delivered</button>
+  <button class="filter-tab" onclick="filterOrders('Cancelled',this)">❌ Cancelled</button>
+</div>
+
+<div class="container">
+  <div id="ordersContainer">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      Loading your orders...
+    </div>
+  </div>
+</div>
+
+<div class="page-footer">
+  <div class="footer-brand">📚 Nova<span>lix</span></div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="books.html">Books</a>
+    <a href="cart.html">Cart</a>
+  </div>
+</div>
+
+<!-- CANCEL MODAL -->
+<div class="cancel-modal-overlay" id="cancelModal">
+  <div class="cancel-modal">
+    <div style="font-size:54px;margin-bottom:12px;">❌</div>
+    <h3>Cancel Order?</h3>
+    <p>Are you sure you want to cancel Order <b id="cancelOrderNum"></b>?<br>This action cannot be undone.</p>
+    <div class="cancel-modal-btns">
+      <button class="btn-cancel-back" onclick="closeCancelModal()">← Go Back</button>
+      <button class="btn-cancel-confirm" onclick="cancelOrder()">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+let allOrders    = [];
+let activeFilter = "All";
+
+const stages = ["Order Placed","Packed","Shipped","Out for Delivery","Delivered"];
+
+const statusClass = {
+    "Order Placed":    "status-placed",
+    "Packed":          "status-packed",
+    "Shipped":         "status-shipped",
+    "Out for Delivery":"status-out",
+    "Delivered":       "status-delivered",
+    "Cancelled":       "status-cancelled"
+};
+
+const statusEmoji = {
+    "Order Placed":    "📋",
+    "Packed":          "📦",
+    "Shipped":         "🚚",
+    "Out for Delivery":"🛵",
+    "Delivered":       "✅",
+    "Cancelled":       "❌"
+};
+
+async function loadOrders(){
+    let username  = localStorage.getItem("username");
+    let container = document.getElementById("ordersContainer");
+    if(!username){ window.location.href="login.html"; return; }
+    try{
+        const res = await fetch(`http://127.0.0.1:5000/my-orders/${username}`);
+        if(!res.ok) throw new Error("Server error");
+        allOrders = await res.json();
+        let delivered = allOrders.filter(o=>o.status==="Delivered").length;
+        let active    = allOrders.filter(o=>o.status!=="Delivered").length;
+        let spent     = allOrders.reduce((s,o)=>s+parseFloat(o.total||0),0);
+        document.getElementById("totalOrders").innerText    = allOrders.length;
+        document.getElementById("deliveredCount").innerText = delivered;
+        document.getElementById("activeCount").innerText    = active;
+        document.getElementById("totalSpent").innerHTML     = "₹"+spent.toFixed(0);
+        renderOrders(allOrders);
+    }catch(err){
+        container.innerHTML=`<div class="empty-orders"><div class="empty-icon">❌</div><h3>Could not load orders</h3><p>Make sure Flask is running!</p></div>`;
+    }
+}
+
+function renderOrders(orders){
+    let container = document.getElementById("ordersContainer");
+    if(orders.length===0){
+        container.innerHTML=`<div class="empty-orders"><div class="empty-icon">📦</div><h3>No orders yet!</h3><p>Start shopping and your orders will appear here</p><a class="shop-now-btn" href="books.html">📖 Browse Books</a></div>`;
+        return;
+    }
+    container.innerHTML="";
+    let sorted=[...orders].sort((a,b)=>b.id-a.id);
+    sorted.forEach(order=>{
+        let statusIdx=stages.indexOf(order.status);
+        if(statusIdx===-1)statusIdx=0;
+        let stepsHtml=stages.map((stage,i)=>{
+            let cls=i<statusIdx?"done":i===statusIdx?"active":"";
+            return `<div class="track-step ${cls}"><div class="track-dot">${stage==="Order Placed"?"📋":stage==="Packed"?"📦":stage==="Shipped"?"🚚":stage==="Out for Delivery"?"🛵":"✅"}</div><p>${stage==="Out for Delivery"?"On Way":stage}</p></div>`;
+        }).join("");
+        let itemsHtml="";
+        if(order.items){
+            order.items.split(", ").forEach(item=>{
+                // Flexible regex: handles ₹ or ? or any symbol before price
+                let parts = item.match(/^(.+?)\s+x(\d+)\s+[₹?]?([\d.]+)$/) ||
+                            item.match(/^(.+?)\s+[₹?]?([\d.]+)$/);
+                if(parts && parts.length >= 3){
+                    let bookName = parts[1].trim();
+                    let qty      = parts[3] ? parts[2] : null;
+                    let price    = parts[3] || parts[2];
+                    itemsHtml += `<div class="order-item-row">
+                        <span class="order-item-name">📖 ${bookName} ${qty && !isNaN(qty) ? `<b style="color:#2a5298;">x${qty}</b>` : ''}</span>
+                        <span class="order-item-price">₹${parseFloat(price).toFixed(2)}</span>
+                    </div>`;
+                }else{
+                    itemsHtml+=`<div class="order-item-row"><span class="order-item-name">📖 ${item}</span></div>`;
+                }
+            });
+        }
+        let addressText=(order.address&&order.address.trim()&&order.address!=="Address not available")?order.address:"Address not available";
+        let dateStr="";
+        if(order.checkout_date){
+            try{
+                let d=new Date(order.checkout_date);
+                dateStr=d.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})+" • "+d.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",hour12:true});
+            }catch(e){dateStr=order.checkout_date;}
+        }
+        container.innerHTML+=`
+        <div class="order-card">
+            <div class="order-card-header">
+                <div class="order-left">
+                    <div class="order-id">📦 Order #${order.id}</div>
+                    <div class="order-date">📅 ${dateStr}</div>
+                    <div class="order-payment">💳 ${order.payment_method||"COD"}</div>
+                </div>
+                <div class="order-right">
+                    <div class="order-total">₹${parseFloat(order.total).toFixed(2)}</div>
+                    <div class="status-badge ${statusClass[order.status]||'status-placed'}">${statusEmoji[order.status]||"📋"} ${order.status||"Order Placed"}</div>
+                </div>
+            </div>
+            <div class="order-card-body">
+                <div class="track-steps">${stepsHtml}</div>
+                <div class="order-items-list">${itemsHtml}</div>
+                <div class="order-address-row"><span class="addr-icon">📍</span><span>${addressText}</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+                    <button class="reorder-btn" onclick="reorder('${encodeURIComponent(order.items)}')">🔄 Reorder</button>
+                    ${order.status==="Order Placed"?`<button class="cancel-btn" onclick="confirmCancel(${order.id})">Cancel Order</button>`:`<span></span>`}
+                </div>
+            </div>
+        </div>`;
+    });
+}
+
+function filterOrders(status,el){
+    activeFilter=status;
+    document.querySelectorAll(".filter-tab").forEach(t=>t.classList.remove("active"));
+    el.classList.add("active");
+    if(status==="All"){renderOrders(allOrders);}
+    else{let filtered=allOrders.filter(o=>o.status===status);renderOrders(filtered);}
+}
+
+loadOrders();
+setInterval(loadOrders,30000);
+
+function reorder(encodedItems){
+    let items = decodeURIComponent(encodedItems);
+    let cart  = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Parse items from order string e.g. "Clean Code x1 ₹599.00, Harry Potter x1 ₹399.00"
+    items.split(", ").forEach(item=>{
+        let parts = item.match(/^(.+?)\s+x(\d+)\s+[₹?]?([\d.]+)$/) ||
+                    item.match(/^(.+?)\s+[₹?]?([\d.]+)$/);
+        if(parts){
+            let name  = parts[1].trim();
+            let qty   = parts[3] ? parseInt(parts[2]) : 1;
+            let price = parts[3] || parts[2];
+            for(let i=0; i<qty; i++){
+                cart.push({name, price: parseFloat(price)});
+            }
+        }
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("✅ Items added to cart! Redirecting...");
+    window.location.href = "cart.html";
+}
+
+let cancelOrderId = null;
+
+function confirmCancel(orderId){
+    cancelOrderId = orderId;
+    document.getElementById("cancelOrderNum").innerText = "#" + orderId;
+    document.getElementById("cancelModal").classList.add("open");
+}
+
+function closeCancelModal(){
+    document.getElementById("cancelModal").classList.remove("open");
+    cancelOrderId = null;
+}
+
+async function cancelOrder(){
+    if(!cancelOrderId) return;
+    document.querySelector(".btn-cancel-confirm").innerText = "Cancelling...";
+    document.querySelector(".btn-cancel-confirm").disabled  = true;
+    try{
+        const res = await fetch(`http://127.0.0.1:5000/cancel-order/${cancelOrderId}`, {
+            method:"PUT",
+            headers:{"Content-Type":"application/json"}
+        });
+        const result = await res.json();
+        if(result.message === "Order cancelled"){
+            closeCancelModal();
+            loadOrders();
+            if(result.refund_done){
+                alert(`✅ Order #${cancelOrderId} cancelled!\n💰 Refund initiated! Money will be returned in 5-7 business days.\nRefund ID: ${result.refund_id}`);
+            } else {
+                alert(`✅ Order #${cancelOrderId} cancelled successfully!`);
+            }
+        } else {
+            alert("❌ Could not cancel: " + (result.error || "Unknown error"));
+        }
+    } catch(err){
+        alert("❌ Server error! Make sure Flask is running.");
+    }
+    document.querySelector(".btn-cancel-confirm").innerText = "Yes, Cancel";
+    document.querySelector(".btn-cancel-confirm").disabled  = false;
+}
+
+/* ── PROFILE ── */
+function initAuth(){
+  if(localStorage.getItem("loggedIn")==="true"){
+    if(document.getElementById("authButtons"))document.getElementById("authButtons").style.display="none";
+    var lb=document.getElementById("loggedInButtons");
+    if(lb)lb.style.display="flex";
+    var u=localStorage.getItem("username")||"User";
+    if(document.getElementById("headerUser"))document.getElementById("headerUser").innerText=u;
+    if(document.getElementById("headerUser"))document.getElementById("headerUser").innerText=u;
+  }else{
+    if(document.getElementById("authButtons"))document.getElementById("authButtons").style.display="flex";
+    if(document.getElementById("loggedInButtons"))document.getElementById("loggedInButtons").style.display="none";
+  }
+}
+initAuth();
+async function toggleProfile(){
+  var dd=document.getElementById("profileDropdown");
+  if(dd.style.display==="block"){dd.style.display="none";return;}
+  dd.style.display="block";
+  document.getElementById("dropName").innerText=localStorage.getItem("username")||"User";
+  try{
+    var res=await fetch("http://127.0.0.1:5000/user-profile/"+localStorage.getItem("username"));
+    var data=await res.json();
+    document.getElementById("dropEmail").innerText=data.email||"—";
+    document.getElementById("profileDropOrders").innerText=data.total_orders||"0";
+  }catch(e){document.getElementById("dropEmail").innerText="Could not load";}
+}
+document.addEventListener("click",function(e){
+  var dd=document.getElementById("profileDropdown");
+  if(dd&&!e.target.closest("#profileDropdown")&&!e.target.closest(".profile-avatar")){dd.style.display="none";}
+});
+function logout(){
+  localStorage.removeItem("loggedIn");localStorage.removeItem("username");
+  window.location.href="index.html";
+}
+</script>
+</body>
+</html>

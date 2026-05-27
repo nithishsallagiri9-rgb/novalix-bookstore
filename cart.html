@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart | Novalix</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ══════════════════════════════════════════
+   BODY — warm bookshop counter photo
+   ══════════════════════════════════════════ */
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background-color:#0d1a0a;
+  background-image:
+    linear-gradient(to bottom,
+      rgba(8,20,10,.62) 0%,
+      rgba(10,24,12,.50) 40%,
+      rgba(8,20,10,.60) 100%
+    ),
+    url('https://images.unsplash.com/photo-1521056787327-165eb2b33ae6?w=1920&q=80&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,rgba(12,28,14,.97),rgba(20,50,22,.97));
+  padding:18px 50px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 30px rgba(0,0,0,.5);
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid rgba(212,175,55,.35);
+  backdrop-filter:blur(14px);
+}
+header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.7),transparent);
+}
+.logo{font-family:'Playfair Display',serif;font-size:26px;color:white;letter-spacing:1px;text-decoration:none;}
+.logo span{color:#f5d76e;text-shadow:0 0 18px rgba(245,215,110,.5);}
+.header-right{display:flex;align-items:center;gap:15px;}
+.welcome-text{color:rgba(255,255,255,.75);font-size:13px;}
+.welcome-text b{color:#f5d76e;}
+.books-btn{
+  background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);
+  color:white;padding:8px 20px;border-radius:30px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:.3s;text-decoration:none;
+}
+.books-btn:hover{background:rgba(255,255,255,.22);border-color:rgba(212,175,55,.5);transform:translateY(-1px);}
+
+/* ── NAV ── */
+nav{
+  background:rgba(255,255,255,.96);backdrop-filter:blur(20px);
+  display:flex;justify-content:center;gap:0;padding:0;
+  box-shadow:0 3px 20px rgba(0,0,0,.2);
+  border-bottom:2px solid rgba(212,175,55,.22);flex-wrap:wrap;
+}
+nav a{
+  text-decoration:none;color:#2a5298;font-weight:600;font-size:13px;
+  transition:.25s;padding:14px 28px;white-space:nowrap;position:relative;
+}
+nav a::after{
+  content:'';position:absolute;bottom:0;left:50%;right:50%;height:2px;
+  background:linear-gradient(90deg,#d4af37,#f5d76e);transition:.25s;
+}
+nav a:hover{color:#d4af37;}
+nav a:hover::after,nav a.active::after{left:10px;right:10px;}
+nav a.active{color:#d4af37;}
+
+/* ── PAGE TITLE — glass card ── */
+.page-title{
+  text-align:center;padding:44px 20px 22px;
+  position:relative;z-index:10;
+}
+.page-title h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4vw,42px);color:white;margin-bottom:8px;
+  text-shadow:0 3px 20px rgba(0,0,0,.4);
+}
+.page-title h2 span{
+  background:linear-gradient(135deg,#f5d76e,#d4af37);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.page-title p{color:rgba(255,255,255,.65);font-size:14px;font-style:italic;}
+
+/* ornament */
+.ornament{display:flex;align-items:center;gap:12px;max-width:300px;margin:0 auto 8px;}
+.orn-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.6),transparent);}
+.orn-diamond{color:#d4af37;font-size:10px;letter-spacing:4px;}
+
+/* ── MAIN CONTAINER ── */
+.container{
+  max-width:1050px;margin:0 auto;
+  padding:10px 50px 60px;
+  display:grid;
+  grid-template-columns:1fr 370px;
+  gap:24px;
+  position:relative;z-index:10;
+}
+
+/* ── CART BOX — white glass ── */
+.cart-box{
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(20px);
+  border-radius:22px;overflow:hidden;
+  box-shadow:0 25px 70px rgba(0,0,0,.45),0 0 0 1px rgba(212,175,55,.12);
+}
+.cart-box::before{
+  content:'';display:block;height:4px;
+  background:linear-gradient(90deg,#1e3c72,#2a5298,#d4af37,#f5d76e,#d4af37,#2a5298,#1e3c72);
+}
+.cart-box-inner{padding:28px;}
+.cart-box-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;color:#1e3c72;
+  margin-bottom:20px;padding-bottom:15px;
+  border-bottom:2px solid #f5f0e8;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cart-box-title span{font-size:13px;color:#999;font-family:'Poppins',sans-serif;font-weight:400;}
+
+.cart-item{
+  display:flex;align-items:center;gap:15px;
+  padding:15px 10px;
+  border-bottom:1px solid #f5f5f5;transition:.25s;
+  border-radius:12px;
+}
+.cart-item:last-child{border-bottom:none;}
+.cart-item:hover{background:linear-gradient(135deg,#fffdf7,#fff8e7);padding-left:14px;}
+.item-icon{
+  font-size:28px;
+  background:linear-gradient(135deg,#fffdf7,#fff8e7);
+  border:2px solid #f0e4b8;border-radius:12px;
+  width:52px;height:52px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 4px 12px rgba(212,175,55,.15);
+}
+.item-info{flex:1;}
+.item-name{font-weight:600;color:#1a1a2e;font-size:13.5px;margin-bottom:3px;}
+.item-price{color:#b8860b;font-weight:700;font-size:13px;}
+.item-qty{display:flex;align-items:center;gap:8px;}
+.qty-btn{
+  width:28px;height:28px;border-radius:50%;border:none;
+  font-size:15px;font-weight:700;cursor:pointer;transition:.25s;
+  display:flex;align-items:center;justify-content:center;
+}
+.qty-btn.minus{background:#fff0f0;color:#ff4d4d;}
+.qty-btn.minus:hover{background:#ff4d4d;color:white;}
+.qty-btn.plus{background:#f0fff4;color:#27ae60;}
+.qty-btn.plus:hover{background:#27ae60;color:white;}
+.qty-num{font-weight:700;font-size:15px;color:#1e3c72;min-width:22px;text-align:center;}
+.remove-btn{background:none;border:none;font-size:18px;cursor:pointer;color:#ffb3b3;transition:.3s;padding:5px;}
+.remove-btn:hover{color:#ff4d4d;transform:scale(1.2);}
+
+.empty-cart{text-align:center;padding:60px 20px;}
+.empty-cart .empty-icon{font-size:60px;margin-bottom:14px;opacity:.7;}
+.empty-cart h3{font-family:'Playfair Display',serif;font-size:22px;color:#1e3c72;margin-bottom:8px;}
+.empty-cart p{color:#aaa;font-size:14px;margin-bottom:24px;}
+.shop-btn{
+  display:inline-block;padding:12px 28px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border-radius:30px;font-size:14px;font-weight:600;
+  text-decoration:none;transition:.3s;
+  box-shadow:0 6px 20px rgba(212,175,55,.35);
+}
+.shop-btn:hover{box-shadow:0 10px 28px rgba(212,175,55,.5);transform:translateY(-2px);}
+
+/* ── SUMMARY CARD — glass ── */
+.summary-card{
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(20px);
+  border-radius:22px;overflow:hidden;
+  box-shadow:0 25px 70px rgba(0,0,0,.45),0 0 0 1px rgba(212,175,55,.12);
+  height:fit-content;
+  position:sticky;top:90px;
+}
+.summary-card::before{
+  content:'';display:block;height:4px;
+  background:linear-gradient(90deg,#d4af37,#f5d76e,#d4af37);
+}
+.summary-inner{padding:28px;}
+.summary-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;color:#1e3c72;
+  margin-bottom:20px;padding-bottom:15px;
+  border-bottom:2px solid #f5f0e8;
+}
+.summary-row{
+  display:flex;justify-content:space-between;
+  padding:10px 0;font-size:14px;color:#666;
+  border-bottom:1px solid #f9f9f9;
+}
+.summary-row:last-of-type{border-bottom:none;}
+.summary-row.total{
+  font-size:18px;font-weight:700;color:#1e3c72;
+  margin-top:10px;padding-top:15px;border-top:2px solid #f5f0e8;
+}
+.summary-row.total span:last-child{color:#d4af37;}
+.promo-row{display:flex;gap:8px;margin:15px 0;}
+.promo-row input{
+  flex:1;padding:10px 14px;border:2px solid #eee;border-radius:12px;
+  font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:.3s;
+}
+.promo-row input:focus{border-color:#d4af37;box-shadow:0 0 0 4px rgba(212,175,55,.1);}
+.promo-row button{
+  padding:10px 16px;background:linear-gradient(135deg,#1e3c72,#2a5298);
+  color:white;border:none;border-radius:12px;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;transition:.25s;
+}
+.promo-row button:hover{background:linear-gradient(135deg,#d4af37,#b8860b);}
+#promoMsg{font-size:12px;font-weight:600;text-align:center;margin-bottom:5px;min-height:16px;}
+.checkout-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border:none;border-radius:14px;
+  font-size:15px;font-weight:700;font-family:'Poppins',sans-serif;
+  cursor:pointer;transition:.3s;letter-spacing:.5px;margin-top:10px;
+  box-shadow:0 6px 22px rgba(212,175,55,.4);
+}
+.checkout-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,175,55,.55);}
+.checkout-btn:disabled{background:#ccc;cursor:not-allowed;transform:none;box-shadow:none;}
+.secure-note{
+  text-align:center;margin-top:12px;font-size:11px;color:#bbb;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.clear-btn{
+  width:100%;padding:10px;background:#fff0f0;color:#ff4d4d;
+  border:2px solid #ffcccc;border-radius:12px;
+  font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;
+  cursor:pointer;transition:.3s;margin-top:10px;
+}
+.clear-btn:hover{background:#ff4d4d;color:white;border-color:#ff4d4d;}
+
+/* ── FOOTER STRIP ── */
+.page-footer{
+  margin:0 50px 44px;
+  background:rgba(8,20,10,.9);backdrop-filter:blur(16px);
+  border-radius:16px;padding:20px 36px;
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid rgba(212,175,55,.2);
+  box-shadow:0 10px 40px rgba(0,0,0,.4);
+  position:relative;z-index:10;flex-wrap:wrap;gap:10px;
+}
+.footer-brand{font-family:'Playfair Display',serif;font-size:18px;color:white;}
+.footer-brand span{color:#f5d76e;}
+.footer-links{display:flex;gap:18px;}
+.footer-links a{color:rgba(255,255,255,.55);font-size:12px;text-decoration:none;transition:.2s;font-weight:500;}
+.footer-links a:hover{color:#f5d76e;}
+
+@media(max-width:768px){
+  .container{grid-template-columns:1fr;padding:10px 16px 50px;}
+  header{padding:15px 20px;}
+  .summary-card{position:static;}
+  nav a{padding:12px 16px;font-size:12px;}
+  .page-footer{margin:0 12px 30px;padding:16px 20px;}
+}
+.profile-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#d4af37,#f5d76e);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  cursor:pointer;box-shadow:0 4px 15px rgba(212,175,55,.4);
+  border:2px solid rgba(255,255,255,.3);transition:.2s;flex-shrink:0;
+}
+.profile-avatar:hover{transform:scale(1.08);}
+#profileDropdown{
+  display:none;position:absolute;top:52px;right:0;background:white;
+  border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.2);padding:20px;
+  min-width:220px;border:2px solid #f0e4b8;z-index:999;
+  animation:dropIn .2s ease;
+}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">📚 Nova<span>lix</span></a>
+    <div class="header-right">
+    <div id="authButtons" style="display:flex;gap:8px;">
+      <a href="login.html" style="background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);color:white;padding:7px 18px;border-radius:30px;font-size:13px;font-weight:600;text-decoration:none;">Login</a>
+      <a href="signup.html" style="background:linear-gradient(135deg,#d4af37,#f5d76e);color:#3a2000;padding:7px 18px;border-radius:30px;font-size:13px;font-weight:600;text-decoration:none;">Sign Up</a>
+    </div>
+    <div id="loggedInButtons" style="display:none;position:relative;align-items:center;gap:12px;">
+      <span style="color:rgba(255,255,255,.8);font-size:13px;">Welcome, <b style="color:#f5d76e;" id="headerUser"></b> 👋</span>
+      <div class="profile-avatar" onclick="toggleProfile()">👤</div>
+      <div id="profileDropdown">
+        <div style="text-align:center;margin-bottom:15px;padding-bottom:15px;border-bottom:2px solid #f5f0e8;">
+          <div style="font-size:36px;margin-bottom:8px;">👤</div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;color:#1e3c72;font-weight:700;" id="dropName"></div>
+          <div style="font-size:11px;color:#d4af37;font-weight:700;letter-spacing:1px;">✦ MEMBER</div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📧 Email</div>
+          <div style="font-size:13px;color:#444;font-weight:600;" id="dropEmail">Loading...</div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">📦 Total Orders</div>
+          <div style="font-size:22px;font-weight:700;color:#d4af37;font-family:'Playfair Display',serif;" id="dropOrders">-</div>
+        </div>
+        <button onclick="logout()" style="width:100%;padding:10px;background:#fff0f0;color:#ff4d4d;border:2px solid #ffcccc;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <a href="index.html">🏠 Home</a>
+  <a href="books.html">📖 Books</a>
+  <a href="cart.html" class="active">🛒 Cart</a>
+  <a href="orders.html">📦 My Orders</a>
+  <a href="index.html#contact">📞 Contact</a>
+</nav>
+
+<div class="page-title">
+  <div class="ornament">
+    <div class="orn-line"></div>
+    <div class="orn-diamond">◆ ◆ ◆</div>
+    <div class="orn-line"></div>
+  </div>
+  <h2>My <span>Cart</span></h2>
+  <p id="cartSubtitle">Review your selected books</p>
+</div>
+
+<div class="container">
+  <div class="cart-box">
+    <div class="cart-box-inner">
+      <div class="cart-box-title">
+        🛒 Cart Items
+        <span id="itemCountLabel">0 items</span>
+      </div>
+      <div id="cartItems"></div>
+    </div>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-inner">
+      <div class="summary-title">🧾 Order Summary</div>
+      <div class="summary-row">
+        <span>Items (<span id="summaryCount">0</span>)</span>
+        <span id="summarySubtotal">₹0.00</span>
+      </div>
+      <div class="summary-row">
+        <span>🚚 Delivery</span>
+        <span style="color:#27ae60;font-weight:600;">FREE</span>
+      </div>
+      <div class="summary-row" id="discountRow" style="display:none;">
+        <span>🏷️ Discount</span>
+        <span id="discountVal" style="color:#27ae60;font-weight:600;"></span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span id="summaryTotal">₹0.00</span>
+      </div>
+      <div class="promo-row">
+        <input type="text" id="promoInput" placeholder="Promo code" onkeydown="if(event.key==='Enter') applyPromo()">
+        <button onclick="applyPromo()">Apply</button>
+      </div>
+      <div id="promoMsg"></div>
+      <button class="checkout-btn" id="checkoutBtn" onclick="goCheckout()">🔒 Proceed to Checkout</button>
+      <div class="secure-note">🔒 Secure &amp; encrypted checkout</div>
+      <button class="clear-btn" id="clearCartBtn" onclick="clearCart()">🗑️ Clear Cart</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer">
+  <div class="footer-brand">📚 Nova<span>lix</span></div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="books.html">Books</a>
+    <a href="orders.html">Orders</a>
+  </div>
+</div>
+
+<script>
+let username = localStorage.getItem("username");
+if(document.getElementById("user")) document.getElementById("user").innerText = username || "Guest";
+if(document.getElementById("headerUser")) document.getElementById("headerUser").innerText = username || "Guest";
+
+let cart         = JSON.parse(localStorage.getItem("cart")) || [];
+let discount     = 0;
+let promoApplied = false;
+
+const PROMO_CODES = {
+    "NOVALIX10": 10,
+    "BOOK20":    20,
+    "READ15":    15
+};
+
+renderCart();
+
+function renderCart(){
+    let container = document.getElementById("cartItems");
+    cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if(cart.length === 0){
+        container.innerHTML = `
+        <div class="empty-cart">
+            <div class="empty-icon">🛒</div>
+            <h3>Your cart is empty!</h3>
+            <p>Add some books to get started</p>
+            <a class="shop-btn" href="books.html">📖 Browse Books</a>
+        </div>`;
+        document.getElementById("cartSubtitle").innerText    = "Your cart is empty";
+        document.getElementById("itemCountLabel").innerText  = "0 items";
+        document.getElementById("checkoutBtn").disabled      = true;
+        document.getElementById("clearCartBtn").style.display = "none";
+        updateSummary();
+        return;
+    }
+
+    let grouped = {};
+    cart.forEach(item => {
+        if(grouped[item.name]){
+            grouped[item.name].qty   += 1;
+            grouped[item.name].total += parseFloat(item.price);
+        } else {
+            grouped[item.name] = {
+                price: parseFloat(item.price),
+                qty:   1,
+                total: parseFloat(item.price)
+            };
+        }
+    });
+
+    let totalItems = cart.length;
+    document.getElementById("itemCountLabel").innerText =
+        totalItems + " item" + (totalItems > 1 ? "s" : "");
+    document.getElementById("cartSubtitle").innerText =
+        totalItems + " book" + (totalItems > 1 ? "s" : "") + " in your cart";
+    document.getElementById("checkoutBtn").disabled      = false;
+    document.getElementById("clearCartBtn").style.display = "block";
+
+    container.innerHTML = "";
+    Object.keys(grouped).forEach(name => {
+        let g        = grouped[name];
+        let safeName = name.replace(/'/g,"\\'");
+        container.innerHTML += `
+        <div class="cart-item">
+            <div class="item-icon">📖</div>
+            <div class="item-info">
+                <div class="item-name">${name}</div>
+                <div class="item-price">₹${g.price.toFixed(2)} each</div>
+            </div>
+            <div class="item-qty">
+                <button class="qty-btn minus" onclick="changeQty('${safeName}',${g.price},-1)">−</button>
+                <span class="qty-num">${g.qty}</span>
+                <button class="qty-btn plus"  onclick="changeQty('${safeName}',${g.price},1)">+</button>
+            </div>
+            <div style="font-weight:700;color:#d4af37;font-size:14px;min-width:70px;text-align:right;">
+                ₹${g.total.toFixed(2)}
+            </div>
+            <button class="remove-btn" onclick="removeItem('${safeName}')">🗑️</button>
+        </div>`;
+    });
+
+    updateSummary();
+}
+
+function updateSummary(){
+    let subtotal = cart.reduce((s,i) => s + parseFloat(i.price), 0);
+    let total    = subtotal - discount;
+    if(total < 0) total = 0;
+    document.getElementById("summaryCount").innerText    = cart.length;
+    document.getElementById("summarySubtotal").innerText = "₹" + subtotal.toFixed(2);
+    document.getElementById("summaryTotal").innerText    = "₹" + total.toFixed(2);
+}
+
+function changeQty(name, price, delta){
+    if(delta === 1){ cart.push({name, price}); }
+    else { let idx = cart.findIndex(i => i.name === name); if(idx !== -1) cart.splice(idx,1); }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+}
+
+function removeItem(name){
+    cart = cart.filter(i => i.name !== name);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+}
+
+function clearCart(){
+    if(confirm("🗑️ Clear all items from cart?")){
+        cart = [];
+        localStorage.removeItem("cart");
+        discount     = 0;
+        promoApplied = false;
+        document.getElementById("discountRow").style.display = "none";
+        document.getElementById("promoMsg").innerText        = "";
+        document.getElementById("promoInput").value          = "";
+        renderCart();
+    }
+}
+
+function applyPromo(){
+    let code = document.getElementById("promoInput").value.trim().toUpperCase();
+    let msg  = document.getElementById("promoMsg");
+    if(promoApplied){ msg.innerText="⚠️ Promo already applied!";msg.style.color="#ff9800";return; }
+    if(!code){ msg.innerText="❌ Enter a promo code";msg.style.color="red";return; }
+    if(PROMO_CODES[code]){
+        let pct      = PROMO_CODES[code];
+        let subtotal = cart.reduce((s,i) => s + parseFloat(i.price), 0);
+        discount     = (subtotal * pct) / 100;
+        promoApplied = true;
+        document.getElementById("discountRow").style.display = "flex";
+        document.getElementById("discountVal").innerText = `-₹${discount.toFixed(2)} (${pct}% off)`;
+        msg.innerText=`✅ "${code}" applied! ${pct}% off`;msg.style.color="green";
+        updateSummary();
+    } else { msg.innerText="❌ Invalid promo code";msg.style.color="red"; }
+}
+
+function goCheckout(){
+    if(cart.length === 0){ alert("❌ Your cart is empty!"); return; }
+    if(localStorage.getItem("loggedIn") !== "true"){
+        localStorage.setItem("redirectAfterLogin", "checkout.html");
+        window.location.href = "login.html"; return;
+    }
+    localStorage.setItem("cartDiscount", discount.toFixed(2));
+    window.location.href = "checkout.html";
+}
+
+/* ── PROFILE ── */
+function initAuth(){
+  if(localStorage.getItem("loggedIn")==="true"){
+    if(document.getElementById("authButtons"))document.getElementById("authButtons").style.display="none";
+    var lb=document.getElementById("loggedInButtons");
+    if(lb)lb.style.display="flex";
+    var u=localStorage.getItem("username")||"User";
+    if(document.getElementById("headerUser"))document.getElementById("headerUser").innerText=u;
+    if(document.getElementById("user"))document.getElementById("user").innerText=u;
+  }else{
+    if(document.getElementById("authButtons"))document.getElementById("authButtons").style.display="flex";
+    if(document.getElementById("loggedInButtons"))document.getElementById("loggedInButtons").style.display="none";
+  }
+}
+initAuth();
+async function toggleProfile(){
+  var dd=document.getElementById("profileDropdown");
+  if(dd.style.display==="block"){dd.style.display="none";return;}
+  dd.style.display="block";
+  document.getElementById("dropName").innerText=localStorage.getItem("username")||"User";
+  try{
+    var res=await fetch("http://127.0.0.1:5000/user-profile/"+localStorage.getItem("username"));
+    var data=await res.json();
+    document.getElementById("dropEmail").innerText=data.email||"—";
+    document.getElementById("dropOrders").innerText=data.total_orders||"0";
+  }catch(e){document.getElementById("dropEmail").innerText="Could not load";}
+}
+document.addEventListener("click",function(e){
+  var dd=document.getElementById("profileDropdown");
+  if(dd&&!e.target.closest("#profileDropdown")&&!e.target.closest(".profile-avatar")){dd.style.display="none";}
+});
+function logout(){
+  localStorage.removeItem("loggedIn");localStorage.removeItem("username");
+  window.location.href="index.html";
+}
+</script>
+</body>
+</html>

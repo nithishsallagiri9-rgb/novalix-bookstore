@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up | Novalix</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ══════════════════════════════════════════
+   BODY — bright open bookstore entrance
+   ══════════════════════════════════════════ */
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  background-color:#0c1a10;
+  background-image:
+    linear-gradient(to bottom,
+      rgba(8,18,12,.58) 0%,
+      rgba(10,22,14,.46) 40%,
+      rgba(8,18,12,.56) 100%
+    ),
+    url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1920&q=80&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:linear-gradient(135deg,rgba(10,22,14,.97),rgba(18,44,22,.97));
+  padding:15px 50px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 30px rgba(0,0,0,.55);
+  border-bottom:1px solid rgba(212,175,55,.3);
+  backdrop-filter:blur(14px);
+  position:relative;z-index:10;
+}
+.topbar::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.7),transparent);
+}
+.logo{font-family:'Playfair Display',serif;font-size:24px;color:white;text-decoration:none;letter-spacing:1px;}
+.logo span{color:#f5d76e;text-shadow:0 0 16px rgba(245,215,110,.5);}
+.back-home{color:rgba(255,255,255,.7);font-size:13px;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.3s;font-weight:500;}
+.back-home:hover{color:#f5d76e;}
+
+/* ── MAIN ── */
+.main{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:44px 20px;position:relative;z-index:10;
+}
+
+/* ── WRAPPER ── */
+.wrapper{
+  display:flex;
+  width:940px;min-height:590px;
+  border-radius:28px;overflow:hidden;
+  box-shadow:0 50px 120px rgba(0,0,0,.65),0 0 0 1px rgba(212,175,55,.2);
+  animation:wrapIn .7s cubic-bezier(.25,.8,.25,1) both;
+}
+@keyframes wrapIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── LEFT PANEL ── */
+.left{
+  flex:1;
+  background:linear-gradient(145deg,rgba(14,30,16,.96),rgba(24,52,26,.96));
+  backdrop-filter:blur(20px);
+  padding:50px 42px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+  border-right:1px solid rgba(212,175,55,.18);
+}
+.left::before{content:'';position:absolute;top:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(212,175,55,.13),transparent 65%);border-radius:50%;pointer-events:none;}
+.left::after{content:'';position:absolute;bottom:-60px;right:-60px;width:250px;height:250px;background:radial-gradient(circle,rgba(39,174,96,.15),transparent 65%);border-radius:50%;pointer-events:none;}
+.left-bg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,255,255,.01) 40px,rgba(255,255,255,.01) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,.01) 40px,rgba(255,255,255,.01) 41px);pointer-events:none;}
+
+.left-content{position:relative;z-index:1;}
+.left-logo{font-size:46px;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(212,175,55,.4));}
+.left h1{font-family:'Playfair Display',serif;font-size:36px;color:white;line-height:1.25;margin-bottom:14px;}
+.left h1 span{color:#f5d76e;}
+.left p{color:rgba(255,255,255,.65);font-size:14px;line-height:1.85;margin-bottom:26px;}
+
+.left-features{list-style:none;margin-bottom:24px;}
+.left-features li{
+  color:rgba(255,255,255,.8);font-size:13px;padding:8px 0;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.left-features li:last-child{border-bottom:none;}
+.left-features li .feat-icon{
+  width:32px;height:32px;border-radius:9px;
+  background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;
+}
+
+/* Steps mini */
+.steps-mini{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:16px 18px;
+}
+.steps-mini p{color:rgba(255,255,255,.45);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.step-item{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.step-item:last-child{margin-bottom:0;}
+.step-dot{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,#d4af37,#f5d76e);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#3a2000;flex-shrink:0;
+  box-shadow:0 3px 10px rgba(212,175,55,.4);
+}
+.step-text{color:rgba(255,255,255,.7);font-size:12px;}
+
+/* ── RIGHT PANEL ── */
+.right{
+  flex:1;
+  background:rgba(255,255,255,.98);
+  backdrop-filter:blur(20px);
+  padding:44px 46px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+}
+.right::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,transparent,#27ae60,#d4af37,#f5d76e,#d4af37,#27ae60,transparent);
+}
+.form-top{margin-bottom:22px;}
+.form-top h2{font-family:'Playfair Display',serif;font-size:30px;color:#1e3c72;margin-bottom:6px;}
+.form-top p{color:#aaa;font-size:13px;}
+
+.input-group{margin-bottom:16px;}
+.input-group label{display:block;font-size:11px;font-weight:700;color:#888;margin-bottom:7px;text-transform:uppercase;letter-spacing:.8px;}
+.input-group input{
+  width:100%;padding:13px 18px;border:2px solid #eee;border-radius:14px;
+  font-size:14px;font-family:'Poppins',sans-serif;outline:none;transition:.3s;background:#fafafa;
+}
+.input-group input:focus{border-color:#d4af37;background:white;box-shadow:0 0 0 4px rgba(212,175,55,.1);}
+.input-group input.valid{border-color:#27ae60;background:#f0fff4;}
+.input-group input.invalid{border-color:#ff4d4d;background:#fff5f5;}
+
+.password-wrap{position:relative;}
+.password-wrap input{padding-right:48px;}
+.eye-btn{position:absolute;right:15px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:17px;color:#bbb;transition:.3s;}
+.eye-btn:hover{color:#d4af37;}
+
+/* strength bar */
+.strength-bar{display:flex;gap:4px;margin-top:6px;}
+.strength-seg{flex:1;height:4px;border-radius:4px;background:#eee;transition:.3s;}
+.strength-label{font-size:11px;margin-top:4px;font-weight:700;}
+
+.signup-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border:none;border-radius:14px;
+  font-size:15px;font-weight:700;font-family:'Poppins',sans-serif;
+  cursor:pointer;transition:.3s;letter-spacing:.5px;margin-top:5px;
+  box-shadow:0 6px 22px rgba(212,175,55,.4);
+}
+.signup-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,175,55,.55);}
+
+#msg{margin-top:12px;text-align:center;font-size:13px;font-weight:600;min-height:20px;}
+
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee;}
+.divider span{color:#ccc;font-size:12px;font-weight:600;white-space:nowrap;}
+
+.login-link{text-align:center;font-size:13px;color:#999;}
+.login-link a{color:#d4af37;font-weight:700;text-decoration:none;}
+.login-link a:hover{text-decoration:underline;}
+
+/* ── FOOTER BAR ── */
+.footer-bar{
+  background:rgba(8,18,12,.92);backdrop-filter:blur(14px);
+  text-align:center;padding:15px;
+  color:rgba(255,255,255,.3);font-size:12px;
+  border-top:1px solid rgba(212,175,55,.15);
+  position:relative;z-index:10;
+}
+
+@media(max-width:700px){
+  .wrapper{flex-direction:column;width:100%;max-width:460px;min-height:auto;}
+  .left{padding:30px 26px;min-height:auto;}
+  .left h1{font-size:26px;}
+  .right{padding:32px 26px;}
+  .topbar{padding:12px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo" href="index.html">📚 Nova<span>lix</span></a>
+  <a class="back-home" href="index.html">← Back to Home</a>
+</div>
+
+<div class="main">
+  <div class="wrapper">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="left-bg"></div>
+      <div class="left-content">
+        <div class="left-logo">📚</div>
+        <h1>Join<br><span>Novalix</span><br>Today!</h1>
+        <p>Create your free account and start exploring thousands of books across every genre.</p>
+        <ul class="left-features">
+          <li><div class="feat-icon">📖</div> Browse 500+ curated books</li>
+          <li><div class="feat-icon">🏷️</div> 18+ genres to explore</li>
+          <li><div class="feat-icon">🔒</div> Fast &amp; secure checkout</li>
+          <li><div class="feat-icon">📦</div> Real-time order tracking</li>
+          <li><div class="feat-icon">⭐</div> Rate &amp; review books</li>
+        </ul>
+        <div class="steps-mini">
+          <p>How it works</p>
+          <div class="step-item"><div class="step-dot">1</div><div class="step-text">Create your free account</div></div>
+          <div class="step-item"><div class="step-dot">2</div><div class="step-text">Browse &amp; add books to cart</div></div>
+          <div class="step-item"><div class="step-dot">3</div><div class="step-text">Checkout &amp; track your order</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <div class="form-top">
+        <h2>Create Account ✨</h2>
+        <p>Fill in the details below to get started</p>
+      </div>
+
+      <div class="input-group">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Choose a username"
+          oninput="validateUsername(this)" onkeydown="if(event.key==='Enter') signup()">
+      </div>
+
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email"
+          oninput="validateEmail(this)" onkeydown="if(event.key==='Enter') signup()">
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <div class="password-wrap">
+          <input type="password" id="password" placeholder="Create a strong password"
+            oninput="checkStrength(this.value)" onkeydown="if(event.key==='Enter') signup()">
+          <button class="eye-btn" onclick="togglePass('password',this)">👁️</button>
+        </div>
+        <div class="strength-bar" id="strengthBar">
+          <div class="strength-seg" id="seg1"></div>
+          <div class="strength-seg" id="seg2"></div>
+          <div class="strength-seg" id="seg3"></div>
+          <div class="strength-seg" id="seg4"></div>
+        </div>
+        <div class="strength-label" id="strengthLabel"></div>
+      </div>
+
+      <div class="input-group">
+        <label>Confirm Password</label>
+        <div class="password-wrap">
+          <input type="password" id="confirm" placeholder="Confirm your password"
+            oninput="validateConfirm(this)" onkeydown="if(event.key==='Enter') signup()">
+          <button class="eye-btn" onclick="togglePass('confirm',this)">👁️</button>
+        </div>
+      </div>
+
+      <button class="signup-btn" onclick="signup()">Create My Account →</button>
+      <p id="msg"></p>
+
+      <div class="divider"><span>OR</span></div>
+      <div class="login-link">
+        Already have an account? <a href="login.html">Login here →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-bar">© 2026 Novalix Book Store • All Rights Reserved</div>
+
+<script>
+if(localStorage.getItem("loggedIn") === "true"){
+  window.location.href = "index.html";
+}
+
+function togglePass(id,btn){
+  let input=document.getElementById(id);
+  if(input.type==="password"){input.type="text";btn.innerText="🙈";}
+  else{input.type="password";btn.innerText="👁️";}
+}
+
+function validateUsername(input){
+  if(input.value.trim().length>=3){input.classList.add("valid");input.classList.remove("invalid");}
+  else{input.classList.add("invalid");input.classList.remove("valid");}
+}
+
+function validateEmail(input){
+  let valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value);
+  if(valid){input.classList.add("valid");input.classList.remove("invalid");}
+  else{input.classList.add("invalid");input.classList.remove("valid");}
+}
+
+function validateConfirm(input){
+  let pass=document.getElementById("password").value;
+  if(input.value===pass&&input.value!==""){input.classList.add("valid");input.classList.remove("invalid");}
+  else{input.classList.add("invalid");input.classList.remove("valid");}
+}
+
+function checkStrength(val){
+  let strength=0;
+  if(val.length>=6)strength++;
+  if(val.length>=10)strength++;
+  if(/[A-Z]/.test(val))strength++;
+  if(/[0-9!@#$%]/.test(val))strength++;
+  let colors=["#ff4d4d","#ff9800","#f5d76e","#27ae60"];
+  let labels=["Weak","Fair","Good","Strong"];
+  for(let i=1;i<=4;i++){
+    let seg=document.getElementById("seg"+i);
+    seg.style.background=i<=strength?colors[strength-1]:"#eee";
+  }
+  let label=document.getElementById("strengthLabel");
+  if(val.length===0){label.innerText="";}
+  else{label.innerText=labels[strength-1]||"Weak";label.style.color=colors[strength-1]||"#ff4d4d";}
+}
+
+async function signup(){
+  let username=document.getElementById("username").value.trim();
+  let email=document.getElementById("email").value.trim();
+  let password=document.getElementById("password").value.trim();
+  let confirm=document.getElementById("confirm").value.trim();
+  let msg=document.getElementById("msg");
+  if(!username||!email||!password||!confirm){msg.innerText="❌ Please fill all fields";msg.style.color="red";return;}
+  if(username.length<3){msg.innerText="❌ Username must be at least 3 characters";msg.style.color="red";return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.innerText="❌ Please enter a valid email";msg.style.color="red";return;}
+  if(password.length<6){msg.innerText="❌ Password must be at least 6 characters";msg.style.color="red";return;}
+  if(password!==confirm){msg.innerText="❌ Passwords do not match";msg.style.color="red";return;}
+  msg.innerText="⏳ Creating account...";msg.style.color="#d4af37";
+  try{
+    const res=await fetch("http://127.0.0.1:5000/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,email,password})});
+    const result=await res.json();
+    if(result.message==="Signup success"){
+      msg.innerText="✅ Account created! Redirecting to login...";msg.style.color="green";
+      setTimeout(()=>window.location.href="login.html",1500);
+    }else{msg.innerText="❌ Username already exists! Try another.";msg.style.color="red";}
+  }catch(err){msg.innerText="❌ Cannot connect to server. Start Flask!";msg.style.color="red";}
+}
+</script>
+</body>
+</html>

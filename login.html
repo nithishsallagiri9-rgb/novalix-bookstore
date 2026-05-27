@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Novalix</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ══════════════════════════════════════════
+   BODY — dark moody library reading lamp
+   ══════════════════════════════════════════ */
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  background-color:#0a0c14;
+  background-image:
+    linear-gradient(to bottom,
+      rgba(6,8,20,.70) 0%,
+      rgba(8,10,24,.58) 40%,
+      rgba(6,8,20,.68) 100%
+    ),
+    url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1920&q=80&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:linear-gradient(135deg,rgba(6,10,28,.97),rgba(12,20,52,.97));
+  padding:15px 50px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 30px rgba(0,0,0,.6);
+  border-bottom:1px solid rgba(212,175,55,.3);
+  backdrop-filter:blur(14px);
+  position:relative;z-index:10;
+}
+.topbar::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.7),transparent);
+}
+.logo{font-family:'Playfair Display',serif;font-size:24px;color:white;text-decoration:none;letter-spacing:1px;}
+.logo span{color:#f5d76e;text-shadow:0 0 16px rgba(245,215,110,.5);}
+.back-home{color:rgba(255,255,255,.7);font-size:13px;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.3s;font-weight:500;}
+.back-home:hover{color:#f5d76e;}
+
+/* ── MAIN ── */
+.main{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:50px 20px;position:relative;z-index:10;
+}
+
+/* ── WRAPPER — glass card ── */
+.wrapper{
+  display:flex;
+  width:940px;min-height:560px;
+  border-radius:28px;overflow:hidden;
+  box-shadow:0 50px 120px rgba(0,0,0,.7),0 0 0 1px rgba(212,175,55,.2);
+  animation:wrapIn .7s cubic-bezier(.25,.8,.25,1) both;
+}
+@keyframes wrapIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── LEFT PANEL ── */
+.left{
+  flex:1;
+  background:linear-gradient(145deg,rgba(12,20,56,.96),rgba(20,36,90,.96));
+  backdrop-filter:blur(20px);
+  padding:55px 44px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+  border-right:1px solid rgba(212,175,55,.2);
+}
+/* decorative orbs */
+.left::before{content:'';position:absolute;top:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(212,175,55,.14),transparent 65%);border-radius:50%;pointer-events:none;}
+.left::after{content:'';position:absolute;bottom:-60px;right:-60px;width:250px;height:250px;background:radial-gradient(circle,rgba(42,82,152,.3),transparent 65%);border-radius:50%;pointer-events:none;}
+/* subtle grid texture */
+.left-bg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,255,255,.012) 40px,rgba(255,255,255,.012) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,.012) 40px,rgba(255,255,255,.012) 41px);pointer-events:none;}
+
+.left-content{position:relative;z-index:1;}
+.left-logo{font-size:48px;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(212,175,55,.4));}
+.left h1{font-family:'Playfair Display',serif;font-size:36px;color:white;line-height:1.25;margin-bottom:14px;}
+.left h1 span{color:#f5d76e;}
+.left p{color:rgba(255,255,255,.65);font-size:14px;line-height:1.85;margin-bottom:28px;}
+
+.left-features{list-style:none;}
+.left-features li{
+  color:rgba(255,255,255,.8);font-size:13px;
+  padding:9px 0;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.left-features li:last-child{border-bottom:none;}
+.left-features li .feat-icon{
+  width:34px;height:34px;border-radius:10px;
+  background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+
+/* ── RIGHT PANEL — white ── */
+.right{
+  flex:1;
+  background:rgba(255,255,255,.98);
+  backdrop-filter:blur(20px);
+  padding:52px 48px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.form-top{margin-bottom:26px;}
+.form-top h2{font-family:'Playfair Display',serif;font-size:30px;color:#1e3c72;margin-bottom:6px;}
+.form-top p{color:#aaa;font-size:13px;}
+
+/* gold top accent on right panel */
+.right::before{
+  content:'';position:absolute;top:0;right:0;
+  width:100%;height:4px;
+  background:linear-gradient(90deg,transparent,#d4af37,#f5d76e,#d4af37,transparent);
+  pointer-events:none;
+}
+
+.input-group{margin-bottom:18px;}
+.input-group label{display:block;font-size:11px;font-weight:700;color:#888;margin-bottom:7px;text-transform:uppercase;letter-spacing:.8px;}
+.input-group input{
+  width:100%;padding:13px 18px;border:2px solid #eee;border-radius:14px;
+  font-size:14px;font-family:'Poppins',sans-serif;outline:none;transition:.3s;background:#fafafa;
+}
+.input-group input:focus{border-color:#d4af37;background:white;box-shadow:0 0 0 4px rgba(212,175,55,.1);}
+
+.password-wrap{position:relative;}
+.password-wrap input{padding-right:48px;}
+.eye-btn{position:absolute;right:15px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:17px;color:#bbb;transition:.3s;}
+.eye-btn:hover{color:#d4af37;}
+
+.forgot-row{display:flex;justify-content:flex-end;margin-top:-8px;margin-bottom:18px;}
+.forgot-row a{font-size:12px;color:#d4af37;font-weight:600;text-decoration:none;}
+.forgot-row a:hover{text-decoration:underline;}
+
+.login-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border:none;border-radius:14px;
+  font-size:15px;font-weight:700;font-family:'Poppins',sans-serif;
+  cursor:pointer;transition:.3s;letter-spacing:.5px;
+  box-shadow:0 6px 22px rgba(212,175,55,.4);
+}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,175,55,.55);}
+
+#msg{margin-top:12px;text-align:center;font-size:13px;font-weight:600;min-height:20px;}
+
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#eee;}
+.divider span{color:#ccc;font-size:12px;font-weight:600;white-space:nowrap;}
+
+.signup-link{text-align:center;font-size:13px;color:#999;}
+.signup-link a{color:#d4af37;font-weight:700;text-decoration:none;}
+.signup-link a:hover{text-decoration:underline;}
+
+/* FORGOT BOX */
+.forgot-box{
+  display:none;
+  background:linear-gradient(135deg,#fffdf7,#fff8e7);
+  border:2px solid #f0e4b8;border-radius:16px;padding:22px;margin-top:20px;
+}
+.forgot-box h4{color:#1e3c72;margin-bottom:14px;font-size:14px;font-weight:700;font-family:'Playfair Display',serif;}
+.forgot-box input{
+  width:100%;padding:11px 15px;border:2px solid #eee;border-radius:12px;
+  font-size:13px;font-family:'Poppins',sans-serif;outline:none;margin-bottom:10px;transition:.3s;background:white;
+}
+.forgot-box input:focus{border-color:#d4af37;box-shadow:0 0 0 3px rgba(212,175,55,.1);}
+.forgot-box button{
+  width:100%;padding:11px;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  color:white;border:none;border-radius:12px;
+  font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:.3s;
+}
+.forgot-box button:hover{box-shadow:0 6px 20px rgba(30,60,114,.3);transform:translateY(-1px);}
+#forgotMsg{font-size:12px;text-align:center;margin-top:10px;font-weight:600;}
+
+/* ── FOOTER BAR ── */
+.footer-bar{
+  background:rgba(6,8,22,.92);backdrop-filter:blur(14px);
+  text-align:center;padding:15px;
+  color:rgba(255,255,255,.3);font-size:12px;
+  border-top:1px solid rgba(212,175,55,.15);
+  position:relative;z-index:10;
+}
+
+@media(max-width:700px){
+  .wrapper{flex-direction:column;width:100%;max-width:460px;min-height:auto;}
+  .left{padding:30px 26px;min-height:auto;}
+  .left h1{font-size:26px;}
+  .right{padding:32px 26px;}
+  .topbar{padding:12px 20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="logo" href="index.html">📚 Nova<span>lix</span></a>
+  <a class="back-home" href="index.html">← Back to Home</a>
+</div>
+
+<div class="main">
+  <div class="wrapper">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="left-bg"></div>
+      <div class="left-content">
+        <div class="left-logo">📚</div>
+        <h1>Welcome<br>Back to<br><span>Novalix</span></h1>
+        <p>Your premium book store awaits. Login to continue your reading journey.</p>
+        <ul class="left-features">
+          <li><div class="feat-icon">📦</div> Track your orders live</li>
+          <li><div class="feat-icon">🛒</div> Access your saved cart</li>
+          <li><div class="feat-icon">📖</div> Browse 500+ books</li>
+          <li><div class="feat-icon">⭐</div> Rate &amp; review books</li>
+          <li><div class="feat-icon">📄</div> Download PDF receipts</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right" style="position:relative;">
+      <div class="form-top">
+        <h2>Welcome Back 👋</h2>
+        <p>Login to your Novalix account to continue</p>
+      </div>
+
+      <div class="input-group">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter your username" onkeydown="if(event.key==='Enter') login()">
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <div class="password-wrap">
+          <input type="password" id="password" placeholder="Enter your password" onkeydown="if(event.key==='Enter') login()">
+          <button class="eye-btn" onclick="togglePass()">👁️</button>
+        </div>
+      </div>
+
+      <div class="forgot-row">
+        <a href="#" onclick="toggleForgot()">🔑 Forgot Password?</a>
+      </div>
+
+      <button class="login-btn" onclick="login()">Login to Novalix →</button>
+      <p id="msg"></p>
+
+      <div class="forgot-box" id="forgotBox">
+        <h4>🔑 Reset Your Password</h4>
+        <input type="text" id="resetUser" placeholder="Enter your username">
+        <input type="password" id="newPass" placeholder="New Password">
+        <input type="password" id="confirmPass" placeholder="Confirm New Password">
+        <button onclick="resetPassword()">Reset Password ✓</button>
+        <p id="forgotMsg"></p>
+      </div>
+
+      <div class="divider"><span>OR</span></div>
+      <div class="signup-link">
+        Don't have an account? <a href="signup.html">Create Account →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-bar">© 2026 Novalix Book Store • All Rights Reserved</div>
+
+<script>
+if(localStorage.getItem("loggedIn") === "true"){
+  let redirect = localStorage.getItem("redirectAfterLogin") || "index.html";
+  localStorage.removeItem("redirectAfterLogin");
+  window.location.href = redirect;
+}
+
+function togglePass(){
+  let input=document.getElementById("password");
+  let btn=document.querySelector(".eye-btn");
+  if(input.type==="password"){input.type="text";btn.innerText="🙈";}
+  else{input.type="password";btn.innerText="👁️";}
+}
+
+async function login(){
+  let username=document.getElementById("username").value.trim();
+  let password=document.getElementById("password").value.trim();
+  let msg=document.getElementById("msg");
+  if(!username||!password){msg.innerText="❌ Please fill all fields";msg.style.color="red";return;}
+  msg.innerText="⏳ Logging in...";msg.style.color="#d4af37";
+  try{
+    const res=await fetch("http://127.0.0.1:5000/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
+    const result=await res.json();
+    if(result.status==="success"){
+      localStorage.setItem("loggedIn","true");
+      localStorage.setItem("username",username);
+      msg.innerText="✅ Login successful! Redirecting...";msg.style.color="green";
+      setTimeout(()=>{
+        let redirect = localStorage.getItem("redirectAfterLogin") || "index.html";
+        localStorage.removeItem("redirectAfterLogin");
+        window.location.href = redirect;
+      },1000);
+    }else{msg.innerText="❌ Invalid username or password";msg.style.color="red";}
+  }catch(err){msg.innerText="❌ Cannot connect to server. Start Flask!";msg.style.color="red";}
+}
+
+function toggleForgot(){
+  let box=document.getElementById("forgotBox");
+  box.style.display=box.style.display==="block"?"none":"block";
+}
+
+async function resetPassword(){
+  let username=document.getElementById("resetUser").value.trim();
+  let newPass=document.getElementById("newPass").value.trim();
+  let confirm=document.getElementById("confirmPass").value.trim();
+  let msg=document.getElementById("forgotMsg");
+  if(!username||!newPass||!confirm){msg.innerText="❌ Fill all fields";msg.style.color="red";return;}
+  if(newPass!==confirm){msg.innerText="❌ Passwords do not match";msg.style.color="red";return;}
+  try{
+    const check=await fetch("http://127.0.0.1:5000/check-user",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username})});
+    const checkResult=await check.json();
+    if(!checkResult.exists){msg.innerText="❌ Username not found";msg.style.color="red";return;}
+    const res=await fetch("http://127.0.0.1:5000/reset-password",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,new_password:newPass})});
+    const result=await res.json();
+    if(result.message==="Password reset successful"){
+      msg.innerText="✅ Password reset! Please login.";msg.style.color="green";
+      setTimeout(()=>{document.getElementById("forgotBox").style.display="none";},2000);
+    }
+  }catch(err){msg.innerText="❌ Server error!";msg.style.color="red";}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Detail | Novalix</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#fffdf7,#fff8e7);
+min-height:100vh;
+}
+header{
+background:linear-gradient(135deg,#1e3c72,#2a5298);
+padding:18px 40px;
+display:flex;align-items:center;justify-content:space-between;
+box-shadow:0 8px 30px rgba(0,0,0,.15);
+position:sticky;top:0;z-index:100;
+}
+.logo{
+font-family:'Playfair Display',serif;
+font-size:26px;color:white;
+letter-spacing:1px;text-decoration:none;
+}
+.logo span{color:#f5d76e;}
+.header-right{display:flex;align-items:center;gap:15px;}
+.welcome-text{color:rgba(255,255,255,.8);font-size:13px;}
+.welcome-text b{color:#f5d76e;}
+.cart-btn{
+background:rgba(255,255,255,.15);
+border:1px solid rgba(255,255,255,.3);
+color:white;padding:8px 18px;
+border-radius:30px;font-size:13px;font-weight:600;
+cursor:pointer;transition:.3s;
+font-family:'Poppins',sans-serif;
+text-decoration:none;
+display:flex;align-items:center;gap:8px;
+}
+.cart-btn:hover{background:rgba(255,255,255,.25);}
+.cart-count{
+background:#f5d76e;color:#1e3c72;
+border-radius:50%;width:20px;height:20px;
+font-size:11px;font-weight:700;
+display:flex;align-items:center;justify-content:center;
+}
+.login-header-btn{
+background:linear-gradient(135deg,#d4af37,#f5d76e);
+color:#5a3e00;padding:8px 18px;
+border-radius:30px;font-size:13px;font-weight:600;
+cursor:pointer;transition:.3s;
+text-decoration:none;border:none;
+font-family:'Poppins',sans-serif;
+}
+nav{
+background:white;display:flex;justify-content:center;
+gap:35px;padding:13px;
+box-shadow:0 4px 15px rgba(0,0,0,.06);
+border-bottom:2px solid #f5f0e8;
+}
+nav a{
+text-decoration:none;color:#2a5298;
+font-weight:600;font-size:13px;transition:.3s;
+padding:4px 0;border-bottom:2px solid transparent;
+}
+nav a:hover{color:#d4af37;border-bottom-color:#d4af37;}
+
+/* BACK BTN */
+.back-btn{
+display:inline-flex;align-items:center;gap:8px;
+padding:10px 20px;
+background:white;border:2px solid #f0e4b8;
+border-radius:30px;color:#2a5298;
+font-size:13px;font-weight:600;
+text-decoration:none;transition:.3s;
+margin:25px 40px 0;
+}
+.back-btn:hover{border-color:#d4af37;color:#d4af37;}
+
+/* MAIN DETAIL */
+.detail-container{
+max-width:1000px;margin:30px auto;
+padding:0 20px 60px;
+}
+.detail-card{
+background:white;border-radius:24px;
+padding:40px;
+box-shadow:0 15px 50px rgba(0,0,0,.08);
+display:flex;gap:40px;
+border:2px solid #f5f0e8;
+}
+.detail-left{
+flex:0 0 auto;
+display:flex;flex-direction:column;
+align-items:center;gap:20px;
+}
+.detail-img{
+width:200px;height:280px;
+object-fit:cover;border-radius:16px;
+box-shadow:0 15px 40px rgba(0,0,0,.2);
+}
+.detail-add-btn{
+width:200px;padding:14px;
+background:linear-gradient(135deg,#1e3c72,#2a5298);
+color:white;border:none;border-radius:30px;
+font-size:14px;font-weight:600;
+cursor:pointer;transition:.3s;
+font-family:'Poppins',sans-serif;
+}
+.detail-add-btn:hover{
+background:linear-gradient(135deg,#d4af37,#b8860b);
+transform:translateY(-2px);
+box-shadow:0 8px 25px rgba(212,175,55,.4);
+}
+.qty-selector{
+display:flex;align-items:center;
+justify-content:center;gap:15px;
+}
+.qty-btn{
+width:36px;height:36px;border-radius:50%;
+border:none;font-size:18px;font-weight:700;
+cursor:pointer;transition:.3s;
+display:flex;align-items:center;justify-content:center;
+}
+.qty-btn.minus{background:#fff0f0;color:#ff4d4d;}
+.qty-btn.minus:hover{background:#ff4d4d;color:white;}
+.qty-btn.plus{background:#f0fff4;color:#27ae60;}
+.qty-btn.plus:hover{background:#27ae60;color:white;}
+.qty-num{
+font-weight:700;font-size:18px;
+color:#1e3c72;min-width:25px;text-align:center;
+}
+
+.detail-right{flex:1;}
+.detail-category{
+display:inline-block;
+background:#f0f4ff;color:#2a5298;
+font-size:11px;font-weight:600;
+padding:4px 14px;border-radius:20px;
+margin-bottom:12px;
+}
+.detail-title{
+font-family:'Playfair Display',serif;
+font-size:32px;color:#1e3c72;
+font-weight:900;margin-bottom:8px;line-height:1.3;
+}
+.detail-author{
+color:#999;font-size:15px;margin-bottom:15px;
+}
+.detail-price{
+font-size:28px;font-weight:700;
+color:#d4af37;margin-bottom:15px;
+font-family:'Playfair Display',serif;
+}
+.detail-rating{
+display:flex;align-items:center;gap:10px;
+margin-bottom:20px;
+}
+.detail-stars{color:#f5d76e;font-size:18px;}
+.detail-rating-num{
+font-size:15px;font-weight:700;color:#1e3c72;
+}
+.detail-rating-count{color:#999;font-size:13px;}
+.detail-divider{
+height:2px;background:#f5f0e8;
+margin:20px 0;
+}
+.detail-desc-title{
+font-family:'Playfair Display',serif;
+font-size:18px;color:#1e3c72;margin-bottom:10px;
+}
+.detail-desc{
+color:#555;font-size:14px;line-height:1.9;
+}
+
+/* REVIEWS SECTION */
+.reviews-section{
+background:white;border-radius:24px;
+padding:35px 40px;margin-top:25px;
+box-shadow:0 15px 50px rgba(0,0,0,.08);
+border:2px solid #f5f0e8;
+}
+.reviews-section h2{
+font-family:'Playfair Display',serif;
+font-size:26px;color:#1e3c72;margin-bottom:25px;
+}
+.reviews-section h2 span{
+background:linear-gradient(135deg,#d4af37,#b8860b);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+background-clip:text;
+}
+
+/* WRITE REVIEW */
+.write-review-box{
+background:#fffdf7;border:2px solid #f0e4b8;
+border-radius:16px;padding:25px;margin-bottom:30px;
+}
+.write-review-box h3{
+font-family:'Playfair Display',serif;
+font-size:18px;color:#1e3c72;margin-bottom:15px;
+}
+.login-notice{
+background:#fff8e7;border:2px solid #f0e4b8;
+border-radius:12px;padding:15px 20px;
+font-size:14px;color:#666;text-align:center;
+}
+.login-notice a{
+color:#d4af37;font-weight:700;text-decoration:none;
+}
+.login-notice a:hover{text-decoration:underline;}
+.star-selector{
+display:flex;gap:10px;margin-bottom:15px;
+}
+.star-selector span{
+font-size:32px;cursor:pointer;
+transition:.2s;filter:grayscale(1);
+}
+.star-selector span.active{filter:grayscale(0);}
+.star-selector span:hover{transform:scale(1.2);}
+.review-input{
+width:100%;padding:14px 18px;
+border:2px solid #eee;border-radius:12px;
+font-size:14px;font-family:'Poppins',sans-serif;
+outline:none;transition:.3s;
+resize:none;margin-bottom:15px;
+}
+.review-input:focus{
+border-color:#d4af37;
+box-shadow:0 0 0 4px rgba(212,175,55,.1);
+}
+.submit-review-btn{
+padding:12px 30px;
+background:linear-gradient(135deg,#d4af37,#b8860b);
+color:white;border:none;border-radius:30px;
+font-size:14px;font-weight:600;
+cursor:pointer;transition:.3s;
+font-family:'Poppins',sans-serif;
+}
+.submit-review-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 25px rgba(212,175,55,.4);
+}
+
+/* REVIEW ITEMS */
+.review-item{
+background:#fffdf7;border:2px solid #f0e4b8;
+border-radius:16px;padding:18px 20px;margin-bottom:14px;
+transition:.3s;
+}
+.review-item:hover{border-color:#d4af37;}
+.review-item-top{
+display:flex;justify-content:space-between;
+align-items:center;margin-bottom:8px;
+}
+.review-user{
+font-weight:700;color:#1e3c72;font-size:14px;
+}
+.review-stars{color:#f5d76e;font-size:15px;}
+.review-text{color:#555;font-size:14px;line-height:1.7;}
+.review-date{color:#bbb;font-size:11px;margin-top:6px;}
+.no-reviews{
+text-align:center;color:#999;
+font-size:14px;padding:30px;
+}
+.loading{
+text-align:center;padding:40px;color:#999;
+}
+
+@media(max-width:768px){
+header{padding:15px 20px;}
+.back-btn{margin:15px 20px 0;}
+.detail-card{flex-direction:column;padding:25px;gap:25px;}
+.detail-left{width:100%;}
+.detail-img{width:160px;height:220px;}
+.detail-add-btn{width:100%;}
+.detail-title{font-size:24px;}
+.reviews-section{padding:25px 20px;}
+nav{gap:15px;overflow-x:auto;
+justify-content:flex-start;padding:10px 15px;}
+nav a{font-size:12px;white-space:nowrap;}
+}
+</style>
+</head>
+<body>
+
+<header>
+    <a class="logo" href="index.html">📚 Nova<span>lix</span></a>
+    <div class="header-right">
+        <div id="loggedInHeader" style="display:none;align-items:center;gap:15px;">
+            <div class="welcome-text">Welcome, <b id="user"></b> 👋</div>
+            <a class="cart-btn" href="cart.html">
+                🛒 Cart
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+        </div>
+        <div id="guestHeader" style="display:none;align-items:center;gap:10px;">
+            <a class="cart-btn" href="cart.html">
+                🛒 Cart
+                <span class="cart-count" id="cartCountGuest">0</span>
+            </a>
+            <a class="login-header-btn" href="login.html">🔑 Login</a>
+        </div>
+    </div>
+</header>
+
+<nav>
+    <a href="index.html">🏠 Home</a>
+    <a href="books.html">📖 Books</a>
+    <a href="orders.html">📦 My Orders</a>
+    <a href="index.html#contact">📞 Contact</a>
+</nav>
+
+<a class="back-btn" href="books.html">← Back to Books</a>
+
+<div class="detail-container">
+    <div id="loadingDiv" class="loading">⏳ Loading book details...</div>
+
+    <div id="detailContent" style="display:none;">
+        <div class="detail-card">
+            <div class="detail-left">
+                <img id="bookImg" class="detail-img" src="" alt="Book Cover">
+                <div id="cartBtnArea">
+                    <button class="detail-add-btn" onclick="addToCart()">
+                        + Add to Cart
+                    </button>
+                </div>
+            </div>
+            <div class="detail-right">
+                <div class="detail-category" id="bookCategory"></div>
+                <div class="detail-title" id="bookTitle"></div>
+                <div class="detail-author" id="bookAuthor"></div>
+                <div class="detail-price" id="bookPrice"></div>
+                <div class="detail-rating">
+                    <span class="detail-stars" id="bookStars"></span>
+                    <span class="detail-rating-num" id="bookRatingNum"></span>
+                    <span class="detail-rating-count" id="bookRatingCount"></span>
+                </div>
+                <div class="detail-divider"></div>
+                <div class="detail-desc-title">📖 Description of the Book </div>
+                <div class="detail-desc" id="bookDesc"></div>
+            </div>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="reviews-section">
+            <h2>⭐ Ratings & <span>Reviews</span></h2>
+
+            <div class="write-review-box">
+                <h3>✍️ Write a Review</h3>
+                <div id="writeReviewArea"></div>
+            </div>
+
+            <div id="reviewsList">
+                <div class="no-reviews">⏳ Loading reviews...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let isLoggedIn  = localStorage.getItem("loggedIn") === "true";
+let cart        = JSON.parse(localStorage.getItem("cart")) || [];
+let bookData    = null;
+let selectedRating = 0;
+
+/* HEADER */
+if(isLoggedIn){
+    document.getElementById("loggedInHeader").style.display = "flex";
+    document.getElementById("guestHeader").style.display    = "none";
+    document.getElementById("user").innerText =
+        localStorage.getItem("username") || "User";
+} else {
+    document.getElementById("loggedInHeader").style.display = "none";
+    document.getElementById("guestHeader").style.display    = "flex";
+}
+
+updateCartCount();
+
+function updateCartCount(){
+    let count = cart.length;
+    let el  = document.getElementById("cartCount");
+    let elG = document.getElementById("cartCountGuest");
+    if(el)  el.innerText  = count;
+    if(elG) elG.innerText = count;
+}
+
+/* LOAD BOOK */
+async function loadBook(){
+    let params = new URLSearchParams(window.location.search);
+    let id     = params.get("id");
+    if(!id){
+        window.location.href = "books.html"; return;
+    }
+
+    try{
+        const res   = await fetch("http://127.0.0.1:5000/books");
+        const books = await res.json();
+        bookData    = books.find(b => b.id == id);
+
+        if(!bookData){
+            document.getElementById("loadingDiv").innerHTML =
+                "❌ Book not found!"; return;
+        }
+
+        /* RATINGS */
+        let avgData = {avg:0,count:0};
+        try{
+            const rRes = await fetch(
+                `http://127.0.0.1:5000/avg-rating/${id}`);
+            avgData = await rRes.json();
+        }catch(e){}
+
+        let starsHtml = "";
+        for(let i=1;i<=5;i++){
+            starsHtml += i<=Math.round(avgData.avg)?"⭐":"☆";
+        }
+
+        const catEmojis = {
+            "Coding":"💻","Novel":"📖","Biography":"👤",
+            "Science & Technology":"🔬","Self Help":"🌟",
+            "Business & Finance":"💼","History":"🏛️","Horror":"👻",
+            "Romance":"❤️","Thriller":"🔪","Fantasy":"🧙",
+            "Sports":"⚽","Travel":"✈️","Cooking":"🍳",
+            "Art & Photography":"🎨","Religion & Spirituality":"🙏",
+            "Children's Books":"🧸","Comics & Manga":"💥","Other":"📚"
+        };
+        let emoji = catEmojis[bookData.category] || "📚";
+
+        document.getElementById("bookImg").src =
+            bookData.image ||
+            "https://via.placeholder.com/200x280?text=No+Cover";
+        document.getElementById("bookImg").onerror = function(){
+            this.src="https://via.placeholder.com/200x280?text=No+Cover";
+        };
+        document.getElementById("bookTitle").innerText    = bookData.name;
+        document.getElementById("bookAuthor").innerText   =
+            "✍️ " + (bookData.author || "Unknown Author");
+        document.getElementById("bookPrice").innerText    =
+            "₹" + bookData.price;
+        document.getElementById("bookCategory").innerText =
+            emoji + " " + (bookData.category || "Other");
+        document.getElementById("bookStars").innerText    = starsHtml;
+        document.getElementById("bookRatingNum").innerText =
+            avgData.avg ? avgData.avg.toFixed(1) + " / 5" : "No ratings yet";
+        document.getElementById("bookRatingCount").innerText =
+            avgData.count ? "(" + avgData.count + " reviews)" : "";
+        document.getElementById("bookDesc").innerText     =
+            bookData.description ||
+            "A wonderful book that takes you on an unforgettable journey. Pick it up and start reading today!";
+
+        /* CART BUTTON */
+        let inCart = cart.filter(i => i.name===bookData.name).length;
+        if(inCart > 0){
+            document.getElementById("cartBtnArea").innerHTML = `
+            <div class="qty-selector">
+                <button class="qty-btn minus" onclick="decreaseQty()">−</button>
+                <span class="qty-num" id="detailQty">${inCart}</span>
+                <button class="qty-btn plus" onclick="increaseQty()">+</button>
+            </div>`;
+        }
+
+        document.getElementById("loadingDiv").style.display   = "none";
+        document.getElementById("detailContent").style.display = "block";
+
+        /* WRITE REVIEW SECTION */
+        let writeArea = document.getElementById("writeReviewArea");
+        if(isLoggedIn){
+            writeArea.innerHTML = `
+            <div class="star-selector" id="starSelector">
+                <span onclick="selectStar(1)">⭐</span>
+                <span onclick="selectStar(2)">⭐</span>
+                <span onclick="selectStar(3)">⭐</span>
+                <span onclick="selectStar(4)">⭐</span>
+                <span onclick="selectStar(5)">⭐</span>
+            </div>
+            <textarea class="review-input" id="reviewText"
+            rows="4"
+            placeholder="Share your thoughts about this book..."></textarea>
+            <button class="submit-review-btn" onclick="submitReview()">
+                ✓ Submit Review
+            </button>`;
+        } else {
+            writeArea.innerHTML = `
+            <div class="login-notice">
+                👋 <a href="login.html">Login</a> to write a review.
+                Everyone can read all reviews below! 😊
+            </div>`;
+        }
+
+        loadReviews(id);
+
+    }catch(err){
+        document.getElementById("loadingDiv").innerHTML =
+            "❌ Could not load book. Make sure Flask is running!";
+    }
+}
+
+/* CART */
+function addToCart(){
+    cart.push({name: bookData.name, price: bookData.price});
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    document.getElementById("cartBtnArea").innerHTML = `
+    <div class="qty-selector">
+        <button class="qty-btn minus" onclick="decreaseQty()">−</button>
+        <span class="qty-num" id="detailQty">1</span>
+        <button class="qty-btn plus" onclick="increaseQty()">+</button>
+    </div>`;
+}
+
+function increaseQty(){
+    cart.push({name: bookData.name, price: bookData.price});
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    let el = document.getElementById("detailQty");
+    el.innerText = parseInt(el.innerText) + 1;
+}
+
+function decreaseQty(){
+    let el  = document.getElementById("detailQty");
+    let qty = parseInt(el.innerText);
+    let idx = cart.findIndex(i => i.name === bookData.name);
+    if(idx !== -1) cart.splice(idx, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    if(qty === 1){
+        document.getElementById("cartBtnArea").innerHTML = `
+        <button class="detail-add-btn" onclick="addToCart()">
+            + Add to Cart
+        </button>`;
+    } else {
+        el.innerText = qty - 1;
+    }
+}
+
+/* STARS */
+function selectStar(num){
+    selectedRating = num;
+    document.querySelectorAll("#starSelector span").forEach((s,i) => {
+        s.classList.toggle("active", i < num);
+    });
+}
+
+/* SUBMIT REVIEW */
+async function submitReview(){
+    if(selectedRating === 0){
+        alert("❌ Please select a star rating!"); return;
+    }
+    let reviewText = document.getElementById("reviewText").value.trim();
+    if(!reviewText){
+        alert("❌ Please write a review!"); return;
+    }
+    let params = new URLSearchParams(window.location.search);
+    let id     = params.get("id");
+
+    await fetch("http://127.0.0.1:5000/add-review",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            book_id:  id,
+            username: localStorage.getItem("username"),
+            rating:   selectedRating,
+            review:   reviewText
+        })
+    });
+    alert("✅ Review submitted! Thank you!");
+    document.getElementById("reviewText").value = "";
+    selectedRating = 0;
+    document.querySelectorAll("#starSelector span").forEach(s =>
+        s.classList.remove("active"));
+    loadReviews(id);
+}
+
+/* LOAD REVIEWS — NO LOGIN NEEDED */
+async function loadReviews(bookId){
+    let container = document.getElementById("reviewsList");
+    container.innerHTML =
+        "<div class='no-reviews'>⏳ Loading reviews...</div>";
+    try{
+        const res     = await fetch(
+            `http://127.0.0.1:5000/get-reviews/${bookId}`);
+        const reviews = await res.json();
+        if(reviews.length === 0){
+            container.innerHTML =
+                "<div class='no-reviews'>No reviews yet — be the first! 😊</div>";
+            return;
+        }
+        container.innerHTML = "";
+        reviews.forEach(r => {
+            let stars = "";
+            for(let i=1;i<=5;i++) stars += i<=r.rating?"⭐":"☆";
+            container.innerHTML += `
+            <div class="review-item">
+                <div class="review-item-top">
+                    <span class="review-user">👤 ${r.username}</span>
+                    <span class="review-stars">${stars}</span>
+                </div>
+                <div class="review-text">${r.review}</div>
+                <div class="review-date">
+                    📅 ${r.review_date.split("T")[0]}
+                </div>
+            </div>`;
+        });
+    }catch(err){
+        container.innerHTML =
+            "<div class='no-reviews'>Could not load reviews</div>";
+    }
+}
+
+loadBook();
+</script>
+</body>
+</html>

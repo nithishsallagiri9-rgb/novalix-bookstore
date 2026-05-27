@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | Novalix</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ══════════════════════════════════════════
+   BODY — warm desk with books & coffee photo
+   ══════════════════════════════════════════ */
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background-color:#1a0e06;
+  background-image:
+    linear-gradient(to bottom,
+      rgba(20,10,4,.65) 0%,
+      rgba(25,14,6,.52) 40%,
+      rgba(20,10,4,.62) 100%
+    ),
+    url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=80&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,rgba(26,14,4,.97),rgba(60,32,8,.97));
+  padding:18px 50px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 30px rgba(0,0,0,.6);
+  position:sticky;top:0;z-index:200;
+  border-bottom:1px solid rgba(212,175,55,.35);
+  backdrop-filter:blur(14px);
+}
+header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.7),transparent);
+}
+.logo{font-family:'Playfair Display',serif;font-size:26px;color:white;letter-spacing:1px;text-decoration:none;}
+.logo span{color:#f5d76e;text-shadow:0 0 18px rgba(245,215,110,.5);}
+.back-btn{
+  background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);
+  color:white;padding:8px 20px;border-radius:30px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif;text-decoration:none;
+}
+.back-btn:hover{background:rgba(255,255,255,.2);border-color:rgba(212,175,55,.5);transform:translateY(-1px);}
+
+/* ── NAV ── */
+nav{
+  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
+  display:flex;justify-content:center;gap:0;
+  box-shadow:0 3px 20px rgba(0,0,0,.25);
+  border-bottom:2px solid rgba(212,175,55,.22);flex-wrap:wrap;
+}
+nav a{
+  text-decoration:none;color:#2a5298;font-weight:600;font-size:13px;
+  transition:.25s;padding:14px 26px;white-space:nowrap;position:relative;
+}
+nav a::after{
+  content:'';position:absolute;bottom:0;left:50%;right:50%;height:2px;
+  background:linear-gradient(90deg,#d4af37,#f5d76e);transition:.25s;
+}
+nav a:hover{color:#d4af37;}
+nav a:hover::after{left:10px;right:10px;}
+
+/* ── PAGE TITLE ── */
+.page-title{
+  text-align:center;padding:44px 20px 22px;
+  position:relative;z-index:10;
+}
+.ornament{display:flex;align-items:center;gap:12px;max-width:280px;margin:0 auto 10px;}
+.orn-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.6),transparent);}
+.orn-diamond{color:#d4af37;font-size:10px;letter-spacing:4px;}
+.page-title h2{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4vw,42px);color:white;margin-bottom:8px;
+  text-shadow:0 3px 20px rgba(0,0,0,.5);
+}
+.page-title h2 span{
+  background:linear-gradient(135deg,#f5d76e,#d4af37);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.page-title p{color:rgba(255,255,255,.6);font-size:14px;font-style:italic;}
+
+/* ── CONTAINER ── */
+.container{
+  max-width:1000px;margin:0 auto;
+  padding:10px 50px 60px;
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;
+  position:relative;z-index:10;
+}
+
+/* ── CARD — white glass panel ── */
+.card{
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(20px);
+  border-radius:22px;overflow:hidden;
+  box-shadow:0 25px 70px rgba(0,0,0,.5),0 0 0 1px rgba(212,175,55,.12);
+  transition:.3s;
+}
+.card:hover{box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(212,175,55,.25);}
+.card::before{
+  content:'';display:block;height:4px;
+  background:linear-gradient(90deg,#b8860b,#d4af37,#f5d76e,#d4af37,#b8860b);
+}
+.card-inner{padding:28px;}
+.card-title{
+  font-family:'Playfair Display',serif;
+  font-size:20px;color:#1e3c72;
+  margin-bottom:20px;padding-bottom:15px;
+  border-bottom:2px solid #f5f0e8;
+  display:flex;align-items:center;gap:10px;
+}
+
+/* ORDER SUMMARY */
+.order-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid #f5f5f5;font-size:14px;
+}
+.order-item:last-child{border-bottom:none;}
+.order-item-name{color:#444;font-weight:500;display:flex;align-items:center;gap:8px;}
+.order-item-price{color:#d4af37;font-weight:700;}
+.order-subtotal,.order-discount,.order-total{display:flex;justify-content:space-between;padding:10px 0;font-size:14px;}
+.order-total{font-size:18px;font-weight:700;color:#1e3c72;border-top:2px solid #f5f0e8;margin-top:8px;padding-top:15px;}
+.order-total span:last-child{color:#d4af37;}
+.order-discount span:last-child{color:#27ae60;font-weight:600;}
+
+/* INPUTS */
+.input-group{margin-bottom:15px;}
+.input-group label{
+  display:block;font-size:11px;font-weight:700;color:#888;
+  margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px;
+}
+.input-group input,
+.input-group textarea{
+  width:100%;padding:12px 16px;border:2px solid #eee;border-radius:12px;
+  font-size:14px;font-family:'Poppins',sans-serif;
+  outline:none;transition:.3s;background:#fafafa;resize:none;
+}
+.input-group input:focus,
+.input-group textarea:focus{
+  border-color:#d4af37;background:white;
+  box-shadow:0 0 0 4px rgba(212,175,55,.1);
+}
+
+/* PAYMENT TABS */
+.payment-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.pay-tab{
+  flex:1;min-width:70px;padding:10px 6px;
+  border:2px solid #eee;border-radius:12px;text-align:center;
+  cursor:pointer;transition:.3s;font-size:11px;font-weight:600;color:#666;background:white;
+}
+.pay-tab:hover{border-color:#d4af37;}
+.pay-tab.active{border-color:#d4af37;background:linear-gradient(135deg,#fffdf7,#fff8e7);color:#d4af37;}
+.pay-tab .tab-icon{font-size:20px;display:block;margin-bottom:4px;}
+.pay-content{display:none;}
+.pay-content.active{display:block;}
+
+/* UPI */
+.upi-apps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px;}
+.upi-app{
+  flex:1;min-width:65px;padding:10px 6px;
+  border:2px solid #eee;border-radius:12px;text-align:center;
+  cursor:pointer;transition:.3s;font-size:11px;font-weight:600;color:#444;
+}
+.upi-app:hover,.upi-app.selected{border-color:#d4af37;background:#fffdf7;}
+.upi-app .app-icon{font-size:24px;display:block;margin-bottom:4px;}
+#qrContainer{
+  text-align:center;background:#f9f9f9;border:2px solid #f0e4b8;
+  border-radius:16px;padding:18px;margin-top:12px;display:none;
+}
+#qrCode{display:flex;justify-content:center;margin:12px 0;}
+.upi-id-text{color:#d4af37;font-weight:700;font-size:13px;}
+.qr-amount{color:#999;font-size:12px;margin-top:5px;}
+
+/* CARD PREVIEW */
+.card-preview{
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  border-radius:16px;padding:18px;color:white;margin-bottom:18px;
+  position:relative;overflow:hidden;
+  box-shadow:0 10px 30px rgba(30,60,114,.4);
+}
+.card-preview::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;background:rgba(255,255,255,.05);border-radius:50%;}
+.card-chip{font-size:22px;margin-bottom:12px;}
+.card-number-display{font-size:15px;letter-spacing:3px;margin-bottom:12px;font-family:monospace;}
+.card-bottom{display:flex;justify-content:space-between;font-size:11px;opacity:.8;}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* NET BANKING */
+.bank-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.bank-item{
+  padding:10px;border:2px solid #eee;border-radius:12px;
+  cursor:pointer;transition:.3s;display:flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;color:#444;
+}
+.bank-item:hover,.bank-item.selected{border-color:#d4af37;background:#fffdf7;}
+.bank-icon{font-size:20px;}
+
+/* PAY BUTTON */
+.pay-now-btn{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border:none;border-radius:30px;
+  font-size:15px;font-weight:700;cursor:pointer;transition:.3s;
+  font-family:'Poppins',sans-serif;margin-top:18px;letter-spacing:.5px;
+  box-shadow:0 6px 22px rgba(212,175,55,.4);
+}
+.pay-now-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,175,55,.55);}
+#msgBox{text-align:center;font-size:13px;font-weight:600;margin-top:10px;min-height:18px;}
+
+/* TRACKING BOX — glass panel */
+.tracking-box{
+  display:none;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(20px);
+  border-radius:22px;overflow:hidden;
+  box-shadow:0 25px 70px rgba(0,0,0,.5),0 0 0 1px rgba(212,175,55,.2);
+  grid-column:1/-1;
+}
+.tracking-box::before{
+  content:'';display:block;height:4px;
+  background:linear-gradient(90deg,#27ae60,#52c989,#27ae60);
+}
+.tracking-inner{padding:28px;}
+.tracking-inner h3{font-family:'Playfair Display',serif;font-size:22px;color:#1e3c72;margin-bottom:8px;}
+.order-meta{
+  background:#fffdf7;border:1px solid #f0e4b8;border-radius:12px;
+  padding:12px 18px;font-size:13px;color:#666;margin-bottom:25px;
+  display:flex;gap:20px;flex-wrap:wrap;
+}
+.order-meta span{font-weight:700;color:#1e3c72;}
+.steps{display:flex;justify-content:space-between;align-items:flex-start;position:relative;}
+.steps::before{content:'';position:absolute;top:20px;left:0;right:0;height:3px;background:#f0e4b8;z-index:0;}
+.step{text-align:center;z-index:1;flex:1;}
+.step .dot{
+  width:42px;height:42px;border-radius:50%;background:#f0e4b8;
+  margin:0 auto 10px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;border:3px solid white;box-shadow:0 4px 10px rgba(0,0,0,.1);transition:.3s;
+}
+.step.active .dot{background:linear-gradient(135deg,#d4af37,#b8860b);box-shadow:0 6px 18px rgba(212,175,55,.4);}
+.step.done .dot{background:linear-gradient(135deg,#27ae60,#1e8449);}
+.step p{font-size:11px;color:#999;font-weight:600;}
+.step.active p{color:#d4af37;}
+.step.done p{color:#27ae60;}
+
+/* PAYMENT MODAL */
+.pay-modal-overlay{
+  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(6px);
+  z-index:2000;align-items:center;justify-content:center;
+}
+.pay-modal-overlay.open{display:flex;}
+.pay-modal{
+  background:white;border-radius:24px;padding:40px;
+  width:90%;max-width:400px;text-align:center;
+  box-shadow:0 40px 80px rgba(0,0,0,.4);
+  border:2px solid rgba(212,175,55,.2);
+  animation:modalIn .3s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+.processing{display:none;}
+.spinner{
+  width:65px;height:65px;border:5px solid #f0e4b8;
+  border-top:5px solid #d4af37;border-radius:50%;
+  animation:spin 1s linear infinite;margin:0 auto 20px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.processing h3{font-family:'Playfair Display',serif;font-size:22px;color:#1e3c72;margin-bottom:8px;}
+.processing p{color:#999;font-size:13px;}
+.success-box{display:none;}
+.success-icon{font-size:68px;margin-bottom:15px;animation:pop .4s cubic-bezier(.34,1.6,.64,1);}
+@keyframes pop{from{transform:scale(0);}to{transform:scale(1);}}
+.success-box h3{font-family:'Playfair Display',serif;font-size:24px;color:#27ae60;margin-bottom:8px;}
+.success-box p{color:#666;font-size:14px;margin-bottom:20px;line-height:1.7;}
+.modal-btn{
+  padding:12px 24px;border:none;border-radius:30px;
+  font-size:13px;font-weight:700;cursor:pointer;transition:.3s;
+  font-family:'Poppins',sans-serif;margin:5px;
+}
+.btn-green{background:linear-gradient(135deg,#27ae60,#1e8449);color:white;box-shadow:0 4px 14px rgba(39,174,96,.3);}
+.btn-gold{background:linear-gradient(135deg,#d4af37,#b8860b);color:white;box-shadow:0 4px 14px rgba(212,175,55,.3);}
+.btn-green:hover,.btn-gold:hover{transform:translateY(-2px);}
+
+/* footer strip */
+.page-footer{
+  margin:0 50px 44px;
+  background:rgba(20,10,4,.9);backdrop-filter:blur(16px);
+  border-radius:16px;padding:18px 36px;
+  display:flex;align-items:center;justify-content:space-between;
+  border:1px solid rgba(212,175,55,.2);
+  box-shadow:0 10px 40px rgba(0,0,0,.4);
+  position:relative;z-index:10;flex-wrap:wrap;gap:10px;
+}
+.footer-brand{font-family:'Playfair Display',serif;font-size:18px;color:white;}
+.footer-brand span{color:#f5d76e;}
+.footer-links{display:flex;gap:18px;}
+.footer-links a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;transition:.2s;font-weight:500;}
+.footer-links a:hover{color:#f5d76e;}
+
+@media(max-width:700px){
+  .container{grid-template-columns:1fr;padding:10px 14px 50px;}
+  .tracking-box{grid-column:1;}
+  .bank-list{grid-template-columns:1fr;}
+  .card-grid{grid-template-columns:1fr;}
+  header{padding:15px 20px;}
+  nav a{padding:12px 16px;font-size:12px;}
+  .page-footer{margin:0 12px 30px;padding:16px 20px;}
+}
+.profile-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#d4af37,#f5d76e);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  cursor:pointer;box-shadow:0 4px 15px rgba(212,175,55,.4);
+  border:2px solid rgba(255,255,255,.3);transition:.2s;flex-shrink:0;
+}
+.profile-avatar:hover{transform:scale(1.08);}
+#profileDropdown{
+  display:none;position:absolute;top:52px;right:0;background:white;
+  border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.2);padding:20px;
+  min-width:220px;border:2px solid #f0e4b8;z-index:999;
+  animation:dropIn .2s ease;
+}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<script>
+if(localStorage.getItem("loggedIn") !== "true"){
+  window.location.href = "login.html";
+}
+</script>
+
+<header>
+  <a class="logo" href="index.html">📚 Nova<span>lix</span></a>
+  <a class="back-btn" href="cart.html">← Back to Cart</a>
+</header>
+
+<nav>
+  <a href="index.html">🏠 Home</a>
+  <a href="books.html">📖 Books</a>
+  <a href="cart.html">🛒 Cart</a>
+  <a href="orders.html">📦 My Orders</a>
+  <a href="index.html#categories">📂 Categories</a>
+  <a href="index.html#contact">📞 Contact</a>
+</nav>
+
+<div class="page-title">
+  <div class="ornament">
+    <div class="orn-line"></div>
+    <div class="orn-diamond">◆ ◆ ◆</div>
+    <div class="orn-line"></div>
+  </div>
+  <h2>Secure <span>Checkout</span></h2>
+  <p>Complete your order below</p>
+</div>
+
+<div class="container">
+
+  <!-- ORDER SUMMARY -->
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-title">🧾 Order Summary</div>
+      <div id="orderItems"></div>
+      <div class="order-subtotal">
+        <span>Subtotal</span><span id="orderSubtotal">₹0.00</span>
+      </div>
+      <div class="order-discount" id="discountLine" style="display:none;">
+        <span>🏷️ Discount</span><span id="orderDiscount"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:14px;color:#666;">
+        <span>🚚 Delivery</span>
+        <span style="color:#27ae60;font-weight:600;">FREE</span>
+      </div>
+      <div class="order-total">
+        <span>Total</span><span id="orderTotal">₹0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+
+    <!-- DELIVERY -->
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-title">📍 Delivery Details</div>
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" id="custName" placeholder="Enter your full name">
+        </div>
+        <div class="input-group">
+          <label>Phone Number</label>
+          <input type="tel" id="custPhone" placeholder="Enter phone number">
+        </div>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" id="custEmail" placeholder="Enter email address">
+        </div>
+        <div class="input-group">
+          <label>Delivery Address</label>
+          <textarea id="custAddress" rows="3" placeholder="Enter full delivery address"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENT -->
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-title">💳 Payment Method</div>
+        <div class="payment-tabs">
+          <div class="pay-tab active" onclick="switchTab('upi',this)"><span class="tab-icon">📱</span>UPI</div>
+          <div class="pay-tab" onclick="switchTab('card',this)"><span class="tab-icon">💳</span>Card</div>
+          <div class="pay-tab" onclick="switchTab('netbanking',this)"><span class="tab-icon">🏦</span>Net Banking</div>
+          <div class="pay-tab" onclick="switchTab('cod',this)"><span class="tab-icon">💵</span>COD</div>
+        </div>
+
+        <!-- UPI -->
+        <div class="pay-content active" id="tab-upi">
+          <div style="text-align:center;padding:18px 0;">
+            <div style="font-size:36px;margin-bottom:8px;">📱</div>
+            <div style="font-size:13px;font-weight:600;color:#1e3c72;">GPay • PhonePe • Paytm • BHIM</div>
+            <div style="font-size:11px;color:#aaa;margin-top:5px;">All UPI apps supported</div>
+          </div>
+        </div>
+
+        <!-- CARD -->
+        <div class="pay-content" id="tab-card">
+          <div style="text-align:center;padding:18px 0;">
+            <div style="font-size:36px;margin-bottom:8px;">💳</div>
+            <div style="font-size:13px;font-weight:600;color:#1e3c72;">Visa • Mastercard • RuPay • Amex</div>
+            <div style="font-size:11px;color:#aaa;margin-top:5px;">All major cards accepted</div>
+          </div>
+        </div>
+
+        <!-- NET BANKING -->
+        <div class="pay-content" id="tab-netbanking">
+          <div style="text-align:center;padding:18px 0;">
+            <div style="font-size:36px;margin-bottom:8px;">🏦</div>
+            <div style="font-size:13px;font-weight:600;color:#1e3c72;">SBI • HDFC • ICICI • Axis • 50+ Banks</div>
+            <div style="font-size:11px;color:#aaa;margin-top:5px;">All major banks supported</div>
+          </div>
+        </div>
+
+        <!-- COD -->
+        <div class="pay-content" id="tab-cod">
+          <div style="text-align:center;padding:20px;">
+            <div style="font-size:48px;margin-bottom:12px;">💵</div>
+            <div style="font-weight:700;color:#1e3c72;font-size:15px;margin-bottom:8px;">Cash on Delivery</div>
+            <div style="color:#999;font-size:13px;line-height:1.8;">Pay when your order arrives<br>at your doorstep ✅</div>
+          </div>
+        </div>
+
+        <button class="pay-now-btn" onclick="placeOrder()">🔒 Pay &amp; Place Order</button>
+        <p id="msgBox"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACKING -->
+  <div class="tracking-box" id="trackingBox">
+    <div class="tracking-inner">
+      <h3>📦 Order Placed Successfully!</h3>
+      <div class="order-meta">
+        Order ID: <span id="trackOrderId"></span> &nbsp;|&nbsp;
+        Payment: <span id="trackPayment"></span> &nbsp;|&nbsp;
+        Total: <span id="trackTotal"></span>
+      </div>
+      <div class="steps">
+        <div class="step" id="step1"><div class="dot">📋</div><p>Order Placed</p></div>
+        <div class="step" id="step2"><div class="dot">📦</div><p>Packed</p></div>
+        <div class="step" id="step3"><div class="dot">🚚</div><p>Shipped</p></div>
+        <div class="step" id="step4"><div class="dot">🛵</div><p>Out for Delivery</p></div>
+        <div class="step" id="step5"><div class="dot">✅</div><p>Delivered</p></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <div class="footer-brand">📚 Nova<span>lix</span></div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="books.html">Books</a>
+    <a href="cart.html">Cart</a>
+    <a href="orders.html">Orders</a>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="pay-modal-overlay" id="payModal">
+  <div class="pay-modal">
+    <div class="processing" id="processingBox">
+      <div class="spinner"></div>
+      <h3>Processing Payment...</h3>
+      <p>Please wait, do not close this window</p>
+    </div>
+    <div class="success-box" id="successBox">
+      <div class="success-icon">✅</div>
+      <h3>Payment Successful!</h3>
+      <p>Your order has been placed!<br>Order ID: <b id="successOrderId" style="color:#d4af37;"></b></p>
+      <div>
+        <button class="modal-btn btn-green" onclick="downloadBill()">📄 Download Bill</button>
+        <button class="modal-btn btn-gold" onclick="goToOrders()">📦 View Orders</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let cart      = JSON.parse(localStorage.getItem("cart")) || [];
+let discount  = parseFloat(localStorage.getItem("cartDiscount")) || 0;
+let username  = localStorage.getItem("username") || "";
+let activeTab = "upi";
+let selectedUPI  = "";
+let selectedBank = "";
+let orderData    = {};
+
+function loadSummary(){
+    let container = document.getElementById("orderItems");
+    if(cart.length === 0){ container.innerHTML='<p style="color:#999;font-size:14px;">No items in cart</p>'; return; }
+    let grouped = {};
+    cart.forEach(item => {
+        if(grouped[item.name]){ grouped[item.name].qty+=1; grouped[item.name].total+=parseFloat(item.price); }
+        else { grouped[item.name]={price:parseFloat(item.price),qty:1,total:parseFloat(item.price)}; }
+    });
+    let subtotal = cart.reduce((s,i) => s+parseFloat(i.price), 0);
+    let total    = subtotal - discount; if(total<0)total=0;
+    let html="";
+    Object.keys(grouped).forEach(name => {
+        let g=grouped[name];
+        html+=`<div class="order-item"><span class="order-item-name">📖 ${name} ${g.qty>1?`<b style="color:#2a5298;">x${g.qty}</b>`:''}</span><span class="order-item-price">₹${g.total.toFixed(2)}</span></div>`;
+    });
+    container.innerHTML=html;
+    document.getElementById("orderSubtotal").innerText="₹"+subtotal.toFixed(2);
+    document.getElementById("orderTotal").innerText="₹"+total.toFixed(2);
+    document.getElementById("qrAmount").innerText="₹"+total.toFixed(2);
+    if(discount>0){
+        document.getElementById("discountLine").style.display="flex";
+        document.getElementById("orderDiscount").innerText=`-₹${discount.toFixed(2)}`;
+        document.getElementById("orderDiscount").style.color="#27ae60";
+        document.getElementById("orderDiscount").style.fontWeight="600";
+    }
+}
+loadSummary();
+
+function switchTab(tab,el){
+    activeTab=tab;
+    document.querySelectorAll(".pay-tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".pay-content").forEach(c=>c.classList.remove("active"));
+    el.classList.add("active");
+    document.getElementById("tab-"+tab).classList.add("active");
+}
+
+function selectUPI(el,app){
+    document.querySelectorAll(".upi-app").forEach(a=>a.classList.remove("selected"));
+    el.classList.add("selected"); selectedUPI=app;
+    let total=document.getElementById("orderTotal").innerText;
+    document.getElementById("qrContainer").style.display="block";
+    document.getElementById("qrCode").innerHTML="";
+    new QRCode(document.getElementById("qrCode"),{
+        text:`upi://pay?pa=novalix@upi&pn=Novalix&am=${total.replace("₹","")}&cu=INR&tn=BookOrder`,
+        width:140,height:140,colorDark:"#1e3c72",colorLight:"#ffffff"
+    });
+}
+
+function selectBank(el){
+    document.querySelectorAll(".bank-item").forEach(b=>b.classList.remove("selected"));
+    el.classList.add("selected"); selectedBank=el.innerText.trim();
+}
+
+function formatCard(input){
+    let val=input.value.replace(/\D/g,"").substring(0,16);
+    input.value=val.replace(/(.{4})/g,"$1 ").trim();
+}
+
+async function placeOrder(){
+    let name=document.getElementById("custName").value.trim();
+    let phone=document.getElementById("custPhone").value.trim();
+    let email=document.getElementById("custEmail").value.trim();
+    let address=document.getElementById("custAddress").value.trim();
+    let msg=document.getElementById("msgBox");
+    if(!name||!phone||!email||!address){ msg.innerText="❌ Please fill all delivery details";msg.style.color="red";return; }
+    if(cart.length===0){ msg.innerText="❌ Your cart is empty!";msg.style.color="red";return; }
+
+    let grouped={};
+    cart.forEach(item=>{ if(grouped[item.name]){grouped[item.name].qty+=1;grouped[item.name].total+=parseFloat(item.price);}else{grouped[item.name]={price:parseFloat(item.price),qty:1,total:parseFloat(item.price)};} });
+    let itemsText=Object.keys(grouped).map(n=>`${n} x${grouped[n].qty} ₹${grouped[n].total.toFixed(2)}`).join(", ");
+    let subtotal=cart.reduce((s,i)=>s+parseFloat(i.price),0);
+    let total=subtotal-discount; if(total<0)total=0;
+
+    // COD — skip Razorpay, use old flow
+    if(activeTab==="cod"){
+        document.getElementById("payModal").classList.add("open");
+        document.getElementById("processingBox").style.display="block";
+        document.getElementById("successBox").style.display="none";
+        await new Promise(resolve=>setTimeout(resolve,2000));
+        try{
+            const res=await fetch("http://127.0.0.1:5000/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,customer_name:name,phone,email,address,items:itemsText,total:total.toFixed(2),payment_method:"Cash on Delivery"})});
+            const result=await res.json();
+            if(result.message==="Checkout successful"){ showSuccess(result.order_id,grouped,subtotal,total,"Cash on Delivery"); }
+        }catch(err){ document.getElementById("payModal").classList.remove("open"); msg.innerText="❌ Server error!";msg.style.color="red"; }
+        return;
+    }
+
+    // ALL OTHER TABS → Razorpay real payment
+    msg.innerHTML="<span style='display:inline-flex;align-items:center;gap:8px;'><span style='display:inline-block;width:14px;height:14px;border:2px solid #f0e4b8;border-top-color:#d4af37;border-radius:50%;animation:spin 0.8s linear infinite;'></span> Securing your payment...</span>";
+    msg.style.color="#d4af37";
+    await new Promise(resolve=>setTimeout(resolve,1200));
+    msg.innerHTML="<span style='display:inline-flex;align-items:center;gap:8px;'><span style='display:inline-block;width:14px;height:14px;border:2px solid #f0e4b8;border-top-color:#d4af37;border-radius:50%;animation:spin 0.8s linear infinite;'></span> Opening payment gateway...</span>";
+    await new Promise(resolve=>setTimeout(resolve,800));
+    try{
+        // Step 1: Create Razorpay order on backend
+        const orderRes=await fetch("http://127.0.0.1:5000/razorpay-create-order",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,total:total.toFixed(2),items:itemsText})});
+        const orderData_rzp=await orderRes.json();
+        if(orderData_rzp.error){ msg.innerText="❌ "+orderData_rzp.error;msg.style.color="red";return; }
+        msg.innerText="";
+
+        // Step 2: Open Razorpay checkout popup
+        const options={
+            key:            orderData_rzp.key_id,
+            amount:         orderData_rzp.amount,
+            currency:       "INR",
+            name:           "Novalix Book Store",
+            description:    itemsText.substring(0,255),
+            order_id:       orderData_rzp.razorpay_order_id,
+            prefill:        { name, email, contact: phone },
+            theme:          { color: "#d4af37" },
+            handler: async function(response){
+                // Step 3: Verify payment on backend and save order
+                document.getElementById("payModal").classList.add("open");
+                document.getElementById("processingBox").style.display="block";
+                document.getElementById("successBox").style.display="none";
+                try{
+                    const verifyRes=await fetch("http://127.0.0.1:5000/razorpay-verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+                        razorpay_order_id:   response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature:  response.razorpay_signature,
+                        username, customer_name:name, phone, email, address,
+                        items:itemsText, total:total.toFixed(2),
+                        payment_method: activeTab==="upi"?(selectedUPI||"UPI"):activeTab==="card"?"Card":"Net Banking"
+                    })});
+                    const verifyResult=await verifyRes.json();
+                    if(verifyResult.message==="Checkout successful"){ showSuccess(verifyResult.order_id,grouped,subtotal,total,"Razorpay"); }
+                    else{ document.getElementById("payModal").classList.remove("open"); msg.innerText="❌ Payment verification failed!";msg.style.color="red"; }
+                }catch(e){ document.getElementById("payModal").classList.remove("open"); msg.innerText="❌ Server error during verification!";msg.style.color="red"; }
+            },
+            modal:{ ondismiss: function(){ msg.innerText="⚠️ Payment cancelled.";msg.style.color="#d4af37"; } }
+        };
+        const rzp=new Razorpay(options);
+        rzp.open();
+    }catch(err){ msg.innerText="❌ Cannot connect to server. Start Flask!";msg.style.color="red"; }
+}
+
+function showSuccess(order_id,grouped,subtotal,total,payLabel){
+    orderData={orderId:order_id,name:document.getElementById("custName").value.trim(),phone:document.getElementById("custPhone").value.trim(),email:document.getElementById("custEmail").value.trim(),address:document.getElementById("custAddress").value.trim(),items:grouped,subtotal:subtotal.toFixed(2),discount:discount.toFixed(2),total:total.toFixed(2),payment:payLabel,date:new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"long",year:"numeric"})};
+    document.getElementById("processingBox").style.display="none";
+    document.getElementById("successBox").style.display="block";
+    document.getElementById("successOrderId").innerText="#"+order_id;
+    cart=[];localStorage.removeItem("cart");localStorage.removeItem("cartDiscount");
+    document.getElementById("trackingBox").style.display="block";
+    document.getElementById("trackOrderId").innerText=order_id;
+    document.getElementById("trackPayment").innerText=payLabel;
+    document.getElementById("trackTotal").innerText="₹"+total.toFixed(2);
+    updateTracking("Order Placed");
+    setTimeout(()=>{ document.getElementById("trackingBox").scrollIntoView({behavior:"smooth"}); },500);
+}
+
+function updateTracking(status){
+    const stages=["Order Placed","Packed","Shipped","Out for Delivery","Delivered"];
+    let idx=stages.indexOf(status);
+    stages.forEach((s,i)=>{ let step=document.getElementById("step"+(i+1)); step.classList.remove("active","done"); if(i<idx)step.classList.add("done"); if(i===idx)step.classList.add("active"); });
+}
+
+function downloadBill(){
+    const{jsPDF}=window.jspdf; const doc=new jsPDF();
+    doc.setFillColor(30,60,114); doc.rect(0,0,210,42,"F");
+    doc.setTextColor(245,215,110); doc.setFontSize(26); doc.setFont("helvetica","bold");
+    doc.text("NOVALIX BOOK STORE",105,18,{align:"center"});
+    doc.setFontSize(11); doc.setTextColor(255,255,255);
+    doc.text("Your Premium Book Destination",105,30,{align:"center"});
+    doc.setFontSize(10); doc.setTextColor(245,215,110);
+    doc.text("PAYMENT RECEIPT",105,40,{align:"center"});
+    doc.setFillColor(255,253,247); doc.rect(15,48,180,28,"F");
+    doc.setDrawColor(212,175,55); doc.rect(15,48,180,28,"S");
+    doc.setTextColor(30,60,114); doc.setFontSize(10); doc.setFont("helvetica","normal");
+    doc.text(`Order ID : #${orderData.orderId}`,22,57);
+    doc.text(`Date     : ${orderData.date}`,22,65);
+    doc.text(`Payment  : ${orderData.payment}`,110,57);
+    doc.text(`Status   : Confirmed ✓`,110,65);
+    doc.setFillColor(30,60,114); doc.rect(15,82,180,8,"F");
+    doc.setTextColor(255,255,255); doc.setFontSize(10); doc.setFont("helvetica","bold");
+    doc.text("CUSTOMER DETAILS",105,88,{align:"center"});
+    doc.setFont("helvetica","normal"); doc.setTextColor(60,60,60); doc.setFontSize(10);
+    doc.text(`Name    : ${orderData.name}`,20,100);
+    doc.text(`Phone   : ${orderData.phone}`,20,109);
+    doc.text(`Email   : ${orderData.email}`,20,118);
+    doc.text(`Address : ${orderData.address.substring(0,50)}`,20,127);
+    doc.setFillColor(30,60,114); doc.rect(15,135,180,8,"F");
+    doc.setTextColor(255,255,255); doc.setFont("helvetica","bold");
+    doc.text("ORDER ITEMS",105,141,{align:"center"});
+    doc.setFillColor(240,228,184); doc.rect(15,145,180,8,"F");
+    doc.setTextColor(30,60,114); doc.setFontSize(9);
+    doc.text("Book Name",20,151); doc.text("Qty",135,151); doc.text("Price",163,151);
+    let y=162; doc.setFont("helvetica","normal");
+    Object.keys(orderData.items).forEach((name,i)=>{ let g=orderData.items[name]; if(i%2===0){doc.setFillColor(255,253,247);doc.rect(15,y-6,180,10,"F");} doc.setTextColor(60,60,60); doc.text(name.substring(0,38),20,y); doc.text(String(g.qty),138,y); doc.text("Rs."+g.total.toFixed(2),160,y); y+=11; });
+    y+=5; doc.setDrawColor(212,175,55); doc.line(15,y,195,y); y+=8;
+    doc.setFontSize(10); doc.setTextColor(100,100,100);
+    doc.text("Subtotal:",130,y); doc.text("Rs."+orderData.subtotal,165,y); y+=8;
+    if(parseFloat(orderData.discount)>0){ doc.setTextColor(39,174,96); doc.text("Discount:",130,y); doc.text("-Rs."+orderData.discount,165,y); y+=8; }
+    doc.setFillColor(30,60,114); doc.rect(120,y-5,75,12,"F");
+    doc.setTextColor(245,215,110); doc.setFontSize(12); doc.setFont("helvetica","bold");
+    doc.text("TOTAL: Rs."+orderData.total,157,y+3,{align:"center"});
+    y+=22; doc.setFillColor(30,60,114); doc.rect(0,y,210,30,"F");
+    doc.setTextColor(245,215,110); doc.setFontSize(12); doc.setFont("helvetica","bold");
+    doc.text("Thank you for shopping with Novalix!",105,y+12,{align:"center"});
+    doc.setTextColor(255,255,255); doc.setFontSize(9); doc.setFont("helvetica","normal");
+    doc.text("123, Book Street, Chennai, Tamil Nadu | novalix@gmail.com",105,y+22,{align:"center"});
+    doc.save(`Novalix_Receipt_${orderData.orderId}.pdf`);
+}
+
+function goToOrders(){
+    document.getElementById("payModal").classList.remove("open");
+    window.location.href="orders.html";
+}
+
+/* ── PROFILE ── */
+function initAuth(){
+  if(localStorage.getItem("loggedIn")==="true"){
+    if(document.getElementById("authButtons"))document.getElementById("authButtons").style.display="none";
+    var lb=document.getElementById("loggedInButtons");
+    if(lb)lb.style.display="flex";
+    var u=localStorage.getItem("username")||"User";
+    if(document.getElementById("headerUser"))document.getElementById("headerUser").innerText=u;
+    if(document.getElementById("user"))document.getElementById("user").innerText=u;
+  }else{
+    if(document.getElementById("authButtons"))document.getElementById("authButtons").style.display="flex";
+    if(document.getElementById("loggedInButtons"))document.getElementById("loggedInButtons").style.display="none";
+  }
+}
+initAuth();
+async function toggleProfile(){
+  var dd=document.getElementById("profileDropdown");
+  if(dd.style.display==="block"){dd.style.display="none";return;}
+  dd.style.display="block";
+  document.getElementById("dropName").innerText=localStorage.getItem("username")||"User";
+  try{
+    var res=await fetch("http://127.0.0.1:5000/user-profile/"+localStorage.getItem("username"));
+    var data=await res.json();
+    document.getElementById("dropEmail").innerText=data.email||"—";
+    document.getElementById("dropOrders").innerText=data.total_orders||"0";
+  }catch(e){document.getElementById("dropEmail").innerText="Could not load";}
+}
+document.addEventListener("click",function(e){
+  var dd=document.getElementById("profileDropdown");
+  if(dd&&!e.target.closest("#profileDropdown")&&!e.target.closest(".profile-avatar")){dd.style.display="none";}
+});
+function logout(){
+  localStorage.removeItem("loggedIn");localStorage.removeItem("username");
+  window.location.href="index.html";
+}
+</script>
+</body>
+</html>

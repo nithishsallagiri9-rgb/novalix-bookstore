@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | Novalix</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+/* ══════════════════════════════════════════
+   BODY — professional library management desk
+   ══════════════════════════════════════════ */
+body{
+  font-family:'Poppins',sans-serif;
+  min-height:100vh;
+  background-color:#080c18;
+  background-image:
+    linear-gradient(to bottom,
+      rgba(6,8,20,.68) 0%,
+      rgba(8,10,26,.55) 40%,
+      rgba(6,8,20,.65) 100%
+    ),
+    url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1920&q=80&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,rgba(6,8,22,.88),rgba(14,20,50,.92));
+  backdrop-filter:blur(6px);
+  position:relative;z-index:200;
+}
+.login-box{
+  background:rgba(255,255,255,.98);backdrop-filter:blur(20px);
+  border-radius:24px;padding:48px 42px;width:400px;
+  box-shadow:0 50px 120px rgba(0,0,0,.7),0 0 0 1px rgba(212,175,55,.25);
+  text-align:center;
+  animation:wrapIn .6s cubic-bezier(.25,.8,.25,1) both;
+}
+@keyframes wrapIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.login-box::before{
+  content:'';display:block;height:4px;
+  background:linear-gradient(90deg,transparent,#1e3c72,#d4af37,#f5d76e,#d4af37,#1e3c72,transparent);
+  margin:-48px -42px 36px;border-radius:24px 24px 0 0;
+}
+.login-box .admin-logo{font-size:52px;margin-bottom:10px;filter:drop-shadow(0 4px 12px rgba(212,175,55,.4));}
+.login-box h2{font-family:'Playfair Display',serif;font-size:26px;color:#1e3c72;margin-bottom:5px;}
+.login-box p{color:#aaa;font-size:13px;margin-bottom:28px;}
+.login-box input{
+  width:100%;padding:13px 16px;border:2px solid #eee;border-radius:12px;
+  font-size:14px;font-family:'Poppins',sans-serif;outline:none;transition:.3s;
+  background:#fafafa;margin-bottom:14px;
+}
+.login-box input:focus{border-color:#d4af37;background:white;box-shadow:0 0 0 4px rgba(212,175,55,.1);}
+.login-box button{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;
+  font-family:'Poppins',sans-serif;cursor:pointer;transition:.3s;
+  box-shadow:0 6px 20px rgba(212,175,55,.4);
+}
+.login-box button:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(212,175,55,.55);}
+#loginMsg{margin-top:12px;font-size:13px;font-weight:600;min-height:18px;}
+
+/* ── ADMIN PANEL ── */
+.admin-panel{display:none;}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(135deg,rgba(6,10,28,.97),rgba(12,20,52,.97));
+  padding:16px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 30px rgba(0,0,0,.6);
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid rgba(212,175,55,.3);
+  backdrop-filter:blur(14px);
+}
+header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.7),transparent);
+}
+.logo{font-family:'Playfair Display',serif;font-size:24px;color:white;letter-spacing:1px;}
+.logo span{color:#f5d76e;text-shadow:0 0 16px rgba(245,215,110,.5);}
+.header-right{display:flex;align-items:center;gap:12px;}
+.admin-badge{
+  background:linear-gradient(135deg,#d4af37,#f5d76e);
+  color:#3a2000;padding:5px 14px;border-radius:20px;
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  box-shadow:0 3px 12px rgba(212,175,55,.4);
+}
+.logout-btn{
+  background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);
+  color:white;padding:7px 16px;border-radius:30px;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:'Poppins',sans-serif;transition:.3s;
+}
+.logout-btn:hover{background:rgba(255,255,255,.2);border-color:rgba(212,175,55,.5);}
+
+/* ── TABS ── */
+.tabs{
+  background:rgba(255,255,255,.97);backdrop-filter:blur(20px);
+  display:flex;gap:0;
+  box-shadow:0 3px 20px rgba(0,0,0,.22);
+  border-bottom:2px solid rgba(212,175,55,.15);overflow-x:auto;
+}
+.tab{
+  padding:16px 30px;font-size:13px;font-weight:600;
+  color:#666;cursor:pointer;border:none;
+  border-bottom:3px solid transparent;transition:.25s;white-space:nowrap;
+  font-family:'Poppins',sans-serif;background:none;
+}
+.tab:hover{color:#d4af37;}
+.tab.active{color:#d4af37;border-bottom-color:#d4af37;background:rgba(212,175,55,.05);}
+
+/* ── TAB CONTENT — white glass panel ── */
+.tab-content{display:none;padding:32px 40px 60px;background:rgba(248,246,240,.96);}
+.tab-content.active{display:block;}
+
+/* ── STATS GRID ── */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:18px;margin-bottom:30px;
+}
+.stat-box{
+  background:white;border-radius:18px;padding:22px;text-align:center;
+  box-shadow:0 6px 24px rgba(0,0,0,.07);border:2px solid transparent;transition:.28s;
+}
+.stat-box:hover{border-color:#f0e4b8;transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,.1);}
+.stat-box .num{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;}
+.stat-box .label{color:#999;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-top:5px;}
+.stat-gold .num{color:#d4af37;}
+.stat-blue .num{color:#2a5298;}
+.stat-green .num{color:#27ae60;}
+.stat-red .num{color:#ff9800;}
+
+.section-title{
+  font-family:'Playfair Display',serif;font-size:22px;color:#1e3c72;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+.add-btn-top{
+  padding:10px 22px;background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border:none;border-radius:30px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif;
+  box-shadow:0 5px 16px rgba(212,175,55,.35);
+}
+.add-btn-top:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(212,175,55,.45);}
+
+/* form box */
+.form-box{
+  display:none;background:white;border-radius:20px;
+  padding:28px;margin-bottom:25px;
+  box-shadow:0 10px 36px rgba(0,0,0,.09);border:2px solid #f0e4b8;
+}
+.form-box.open{display:block;}
+.form-box h3{font-family:'Playfair Display',serif;font-size:18px;color:#1e3c72;margin-bottom:20px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+.form-group{margin-bottom:0;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{display:block;font-size:11px;font-weight:700;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;padding:11px 14px;border:2px solid #eee;border-radius:12px;
+  font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:.3s;background:#fafafa;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{border-color:#d4af37;background:white;box-shadow:0 0 0 3px rgba(212,175,55,.08);}
+.form-actions{display:flex;gap:10px;margin-top:20px;}
+.save-btn{
+  padding:11px 24px;background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:white;border:none;border-radius:30px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif;
+  box-shadow:0 5px 16px rgba(212,175,55,.3);
+}
+.save-btn:hover{box-shadow:0 8px 22px rgba(212,175,55,.45);transform:translateY(-1px);}
+.cancel-btn{
+  padding:11px 24px;background:#f5f5f5;color:#666;border:none;border-radius:30px;
+  font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:.2s;
+}
+.cancel-btn:hover{background:#eee;}
+#formMsg{font-size:13px;font-weight:600;margin-top:10px;min-height:18px;}
+
+/* search bar */
+.search-bar{display:flex;gap:10px;margin-bottom:20px;}
+.search-bar input{
+  flex:1;padding:11px 18px;border:2px solid #eee;border-radius:30px;
+  font-size:13px;font-family:'Poppins',sans-serif;outline:none;transition:.3s;background:white;
+  box-shadow:0 3px 12px rgba(0,0,0,.04);
+}
+.search-bar input:focus{border-color:#d4af37;box-shadow:0 0 0 3px rgba(212,175,55,.1);}
+
+/* table */
+.table-wrap{background:white;border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,.08);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead{background:linear-gradient(135deg,#1e3c72,#2a5298);}
+thead th{
+  color:white;padding:14px 16px;text-align:left;
+  font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;
+}
+tbody tr{border-bottom:1px solid #f5f0e8;transition:.2s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:#fffdf7;}
+tbody td{padding:14px 16px;font-size:13px;color:#444;vertical-align:middle;}
+
+.book-img{width:45px;height:65px;object-fit:cover;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.15);}
+.book-name{font-weight:600;color:#1a1a2e;font-size:13px;}
+.book-author{color:#aaa;font-size:11px;margin-top:2px;}
+.price-tag{color:#d4af37;font-weight:700;font-size:14px;}
+.cat-badge{background:#f0f4ff;color:#2a5298;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap;}
+.avail-on{background:#e8f5e9;color:#27ae60;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;}
+.avail-off{background:#fff3e0;color:#ff9800;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;}
+.action-btns{display:flex;gap:6px;flex-wrap:wrap;}
+.edit-btn{padding:6px 14px;background:#e3f2fd;color:#1565c0;border:none;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif;}
+.edit-btn:hover{background:#1565c0;color:white;}
+.del-btn{padding:6px 14px;background:#fff0f0;color:#ff4d4d;border:none;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif;}
+.del-btn:hover{background:#ff4d4d;color:white;}
+.toggle-btn{padding:6px 14px;border:none;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif;}
+.toggle-on{background:#fff3e0;color:#ff9800;}
+.toggle-on:hover{background:#ff9800;color:white;}
+.toggle-off{background:#e8f5e9;color:#27ae60;}
+.toggle-off:hover{background:#27ae60;color:white;}
+
+.status-select{padding:6px 12px;border:2px solid #eee;border-radius:20px;font-size:12px;font-family:'Poppins',sans-serif;outline:none;cursor:pointer;transition:.3s;background:white;}
+.status-select:focus{border-color:#d4af37;}
+.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+.badge-placed{background:#fff8e1;color:#f57c00;}
+.badge-packed{background:#e3f2fd;color:#1565c0;}
+.badge-shipped{background:#f3e5f5;color:#7b1fa2;}
+.badge-out{background:#fce4ec;color:#c62828;}
+.badge-delivered{background:#e8f5e9;color:#1b5e20;}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#f5d76e);display:flex;align-items:center;justify-content:center;font-size:16px;}
+
+/* profile dropdown */
+#profileDropdown{
+  display:none;position:absolute;top:52px;right:0;
+  background:white;border-radius:16px;
+  box-shadow:0 15px 50px rgba(0,0,0,.2);
+  padding:20px;min-width:240px;
+  border:2px solid #f0e4b8;z-index:999;
+}
+
+/* spinners */
+.dash-loading{text-align:center;padding:40px;color:#999;font-size:14px;}
+.dash-loading-spinner{width:36px;height:36px;border:4px solid #f0e4b8;border-top:4px solid #d4af37;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.connecting{text-align:center;padding:50px;color:#999;}
+.connecting-spinner{width:40px;height:40px;border:4px solid #f0e4b8;border-top:4px solid #d4af37;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px;}
+
+@media(max-width:768px){
+  .tab-content{padding:20px 15px 40px;}
+  .form-grid{grid-template-columns:1fr;}
+  header{padding:12px 16px;}
+  .tabs .tab{padding:12px 16px;font-size:12px;}
+  table{display:block;overflow-x:auto;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="admin-logo">⚙️</div>
+    <h2>Admin Panel</h2>
+    <p>Login to manage Novalix</p>
+    <input type="text" id="adminUser" placeholder="Admin Username" onkeydown="if(event.key==='Enter') adminLogin()">
+    <input type="password" id="adminPass" placeholder="Admin Password" onkeydown="if(event.key==='Enter') adminLogin()">
+    <button onclick="adminLogin()">Login to Admin →</button>
+    <p id="loginMsg"></p>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+
+<header>
+  <div class="logo">⚙️ Nova<span>lix</span> Admin</div>
+  <div class="header-right">
+    <span class="admin-badge">⚙️ ADMIN</span>
+    <div style="position:relative;">
+      <div onclick="toggleProfile()" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#d4af37,#f5d76e);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;box-shadow:0 4px 15px rgba(212,175,55,.4);border:2px solid rgba(255,255,255,.3);">👤</div>
+      <div id="profileDropdown">
+        <div style="text-align:center;margin-bottom:15px;padding-bottom:15px;border-bottom:2px solid #f5f0e8;">
+          <div style="font-size:32px;margin-bottom:6px;">👤</div>
+          <div style="font-family:'Playfair Display',serif;font-size:17px;color:#1e3c72;font-weight:700;">Admin</div>
+          <div style="font-size:11px;color:#d4af37;font-weight:700;letter-spacing:1px;">⚙️ ADMINISTRATOR</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:15px;">
+          <div style="background:#fffdf7;border:2px solid #f0e4b8;border-radius:10px;padding:10px;text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#d4af37;" id="dropBooks">-</div>
+            <div style="font-size:10px;color:#999;text-transform:uppercase;margin-top:2px;">📚 Books</div>
+          </div>
+          <div style="background:#fffdf7;border:2px solid #f0e4b8;border-radius:10px;padding:10px;text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#2a5298;" id="dropOrders">-</div>
+            <div style="font-size:10px;color:#999;text-transform:uppercase;margin-top:2px;">📦 Orders</div>
+          </div>
+          <div style="background:#fffdf7;border:2px solid #f0e4b8;border-radius:10px;padding:10px;text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#27ae60;" id="dropRevenue">-</div>
+            <div style="font-size:10px;color:#999;text-transform:uppercase;margin-top:2px;">💰 Revenue</div>
+          </div>
+          <div style="background:#fffdf7;border:2px solid #f0e4b8;border-radius:10px;padding:10px;text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#ff9800;" id="dropUsers">-</div>
+            <div style="font-size:10px;color:#999;text-transform:uppercase;margin-top:2px;">👥 Users</div>
+          </div>
+        </div>
+        <button onclick="logout()" style="width:100%;padding:9px;background:#fff0f0;color:#ff4d4d;border:2px solid #ffcccc;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
+  <button class="tab" onclick="switchTab('books',this)">📚 Books</button>
+  <button class="tab" onclick="switchTab('orders',this)">📦 Orders</button>
+  <button class="tab" onclick="switchTab('users',this)">👥 Users</button>
+</div>
+
+<!-- DASHBOARD TAB -->
+<div class="tab-content active" id="tab-dashboard">
+  <div class="stats-grid">
+    <div class="stat-box stat-gold">
+      <div class="num" id="statBooks"><div class="dash-loading-spinner" style="width:24px;height:24px;border-width:3px;margin:4px auto;"></div></div>
+      <div class="label">📚 Total Books</div>
+    </div>
+    <div class="stat-box stat-blue"><div class="num" id="statOrders">—</div><div class="label">📦 Total Orders</div></div>
+    <div class="stat-box stat-green"><div class="num" id="statRevenue">—</div><div class="label">💰 Total Revenue</div></div>
+    <div class="stat-box stat-red"><div class="num" id="statUsers">—</div><div class="label">👥 Total Users</div></div>
+    <div class="stat-box stat-blue"><div class="num" id="statDelivered">—</div><div class="label">✅ Delivered</div></div>
+    <div class="stat-box stat-gold"><div class="num" id="statPending">—</div><div class="label">⏳ Pending</div></div>
+  </div>
+  <div class="section-title">📦 Recent Orders</div>
+  <div id="dashboardRecentBox">
+    <div class="dash-loading"><div class="dash-loading-spinner"></div>Loading recent orders...</div>
+  </div>
+</div>
+
+<!-- BOOKS TAB -->
+<div class="tab-content" id="tab-books">
+  <div class="section-title">
+    📚 Manage Books
+    <button class="add-btn-top" onclick="toggleForm()">➕ Add New Book</button>
+  </div>
+  <div class="form-box" id="bookForm">
+    <h3 id="formTitle">➕ Add New Book</h3>
+    <input type="hidden" id="editBookId">
+    <div class="form-grid">
+      <div class="form-group"><label>Book Name</label><input type="text" id="bookName" placeholder="Enter book name"></div>
+      <div class="form-group"><label>Author</label><input type="text" id="bookAuthor" placeholder="Author name"></div>
+      <div class="form-group"><label>Price (₹)</label><input type="number" id="bookPrice" placeholder="0.00"></div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="bookCategory">
+          <option value="">Select Category</option>
+          <option>Coding</option><option>Novel</option><option>Biography</option>
+          <option>Science & Technology</option><option>Self Help</option>
+          <option>Business & Finance</option><option>History</option><option>Horror</option>
+          <option>Romance</option><option>Thriller</option><option>Fantasy</option>
+          <option>Sports</option><option>Travel</option><option>Cooking</option>
+          <option>Art & Photography</option><option>Religion & Spirituality</option>
+          <option>Children's Books</option><option>Comics & Manga</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group full"><label>Image URL</label><input type="text" id="bookImage" placeholder="https://...image url..."></div>
+      <div class="form-group full"><label>📝 Book Description</label><textarea id="bookDescription" rows="4" placeholder="Write a short description about this book..."></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="save-btn" onclick="saveBook()">💾 Save Book</button>
+      <button class="cancel-btn" onclick="toggleForm()">Cancel</button>
+    </div>
+    <p id="formMsg"></p>
+  </div>
+  <div class="search-bar"><input type="text" id="bookSearch" placeholder="🔍 Search books..." oninput="filterBooks(this.value)"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Cover</th><th>Book Details</th><th>Price</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="booksTableBody"><tr><td colspan="6" style="text-align:center;padding:30px;"><div class="connecting"><div class="connecting-spinner"></div>Connecting to server...</div></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ORDERS TAB -->
+<div class="tab-content" id="tab-orders">
+  <div class="section-title">📦 All Orders</div>
+  <div class="search-bar"><input type="text" id="orderSearch" placeholder="🔍 Search by customer name..." oninput="filterOrdersAdmin(this.value)"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Update</th></tr></thead>
+      <tbody id="ordersTableBody"><tr><td colspan="8" style="text-align:center;padding:30px;"><div class="connecting"><div class="connecting-spinner"></div>Connecting to server...</div></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- USERS TAB -->
+<div class="tab-content" id="tab-users">
+  <div class="section-title">👥 All Users</div>
+  <div class="search-bar"><input type="text" id="userSearch" placeholder="🔍 Search users..." oninput="filterUsers(this.value)"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>User</th><th>Username</th><th>Email</th><th>Orders</th></tr></thead>
+      <tbody id="usersTableBody"><tr><td colspan="5" style="text-align:center;padding:30px;"><div class="connecting"><div class="connecting-spinner"></div>Connecting...</div></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /admin-panel -->
+
+<script>
+const ADMIN_USER="admin";
+const ADMIN_PASS="admin123";
+
+function adminLogin(){
+    let user=document.getElementById("adminUser").value.trim();
+    let pass=document.getElementById("adminPass").value.trim();
+    let msg=document.getElementById("loginMsg");
+    if(!user||!pass){msg.innerText="❌ Fill all fields";msg.style.color="red";return;}
+    if(user===ADMIN_USER&&pass===ADMIN_PASS){
+        document.getElementById("loginScreen").style.display="none";
+        document.getElementById("adminPanel").style.display="block";
+        Promise.all([loadBooksData(),loadOrdersData(),loadUsersData()]).then(()=>{
+            renderDashboard();renderBooksTable(allBooksData);renderOrdersTable(allOrdersData);renderUsersTable(allUsersData);
+        });
+    }else{msg.innerText="❌ Invalid credentials";msg.style.color="red";}
+}
+
+function switchTab(tab,el){
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+    el.classList.add("active");
+    document.getElementById("tab-"+tab).classList.add("active");
+}
+
+function logout(){
+    document.getElementById("adminPanel").style.display="none";
+    document.getElementById("loginScreen").style.display="flex";
+    document.getElementById("adminUser").value="";
+    document.getElementById("adminPass").value="";
+    document.getElementById("profileDropdown").style.display="none";
+    allBooksData=[];allOrdersData=[];allUsersData=[];
+}
+
+async function toggleProfile(){
+    let dropdown=document.getElementById("profileDropdown");
+    if(dropdown.style.display==="block"){dropdown.style.display="none";return;}
+    dropdown.style.display="block";
+    document.getElementById("dropBooks").innerText=allBooksData.length||"—";
+    document.getElementById("dropOrders").innerText=allOrdersData.length||"—";
+    document.getElementById("dropUsers").innerText=allUsersData.length||"—";
+    let revenue=allOrdersData.reduce((s,o)=>s+parseFloat(o.total||0),0);
+    document.getElementById("dropRevenue").innerText="₹"+revenue.toFixed(0);
+}
+
+document.addEventListener("click",function(e){
+    let dropdown=document.getElementById("profileDropdown");
+    if(!e.target.closest("#profileDropdown")&&!e.target.closest("[onclick='toggleProfile()']")){
+        if(dropdown)dropdown.style.display="none";
+    }
+});
+
+let allBooksData=[];
+let allOrdersData=[];
+let allUsersData=[];
+
+async function loadBooksData(){
+    try{
+        const res=await fetch("http://127.0.0.1:5000/books");
+        if(!res.ok)throw new Error("Books fetch failed");
+        allBooksData=await res.json();
+    }catch(err){
+        console.error("Books load error:",err);allBooksData=[];
+        document.getElementById("booksTableBody").innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:#ff9800;">⚠️ Could not load books. Is Flask running?</td></tr>';
+    }
+}
+
+async function loadOrdersData(){
+    try{
+        const res=await fetch("http://127.0.0.1:5000/all-orders");
+        if(!res.ok)throw new Error("Orders fetch failed");
+        allOrdersData=await res.json();
+    }catch(err){
+        console.error("Orders load error:",err);allOrdersData=[];
+        document.getElementById("ordersTableBody").innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:#ff9800;">⚠️ Could not load orders. Is Flask running?</td></tr>';
+    }
+}
+
+async function loadUsersData(){
+    try{
+        const res=await fetch("http://127.0.0.1:5000/all-users");
+        if(!res.ok)throw new Error("Users fetch failed");
+        allUsersData=await res.json();
+    }catch(err){console.error("Users load error:",err);allUsersData=[];}
+}
+
+function renderDashboard(){
+    let revenue=allOrdersData.reduce((s,o)=>s+parseFloat(o.total||0),0);
+    let delivered=allOrdersData.filter(o=>o.status==="Delivered").length;
+    let pending=allOrdersData.filter(o=>o.status!=="Delivered").length;
+    document.getElementById("statBooks").innerText=allBooksData.length;
+    document.getElementById("statOrders").innerText=allOrdersData.length;
+    document.getElementById("statRevenue").innerText="₹"+revenue.toFixed(0);
+    document.getElementById("statUsers").innerText=allUsersData.length;
+    document.getElementById("statDelivered").innerText=delivered;
+    document.getElementById("statPending").innerText=pending;
+    let recent=[...allOrdersData].sort((a,b)=>b.id-a.id).slice(0,10);
+    if(recent.length===0){
+        document.getElementById("dashboardRecentBox").innerHTML='<div style="text-align:center;padding:30px;color:#999;background:white;border-radius:20px;">No orders yet.</div>';return;
+    }
+    let tableHtml=`<div class="table-wrap"><table><thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Date</th><th>Status</th></tr></thead><tbody>`;
+    recent.forEach(o=>{
+        let badgeCls=getBadgeClass(o.status);
+        let dateStr="";
+        if(o.checkout_date){try{let d=new Date(o.checkout_date);dateStr=d.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});}catch(e){dateStr=o.checkout_date;}}
+        tableHtml+=`<tr><td><b>#${o.id}</b></td><td><div style="font-weight:600;color:#1a1a2e;">${o.customer_name||o.username||"—"}</div><div style="font-size:11px;color:#999;">@${o.username||"—"}</div></td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;">${o.items||"—"}</td><td class="price-tag">₹${parseFloat(o.total||0).toFixed(2)}</td><td style="font-size:12px;">${o.payment_method||"COD"}</td><td style="font-size:12px;color:#999;">${dateStr}</td><td><span class="badge ${badgeCls}">${o.status||"Order Placed"}</span></td></tr>`;
+    });
+    tableHtml+=`</tbody></table></div>`;
+    document.getElementById("dashboardRecentBox").innerHTML=tableHtml;
+}
+
+function renderBooksTable(books){
+    let tbody=document.getElementById("booksTableBody");
+    if(!books||books.length===0){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:30px;color:#999;">No books found</td></tr>';return;}
+    tbody.innerHTML="";
+    books.forEach(book=>{
+        let isAvail=book.available!==0&&book.available!==false;
+        tbody.innerHTML+=`<tr><td><img class="book-img" src="${book.image||'https://via.placeholder.com/45x65?text=📖'}" onerror="this.src='https://via.placeholder.com/45x65?text=📖'"></td><td><div class="book-name">${book.name}</div><div class="book-author">by ${book.author||"Unknown"}</div></td><td><span class="price-tag">₹${book.price}</span></td><td><span class="cat-badge">${book.category||"Other"}</span></td><td><span class="${isAvail?'avail-on':'avail-off'}">${isAvail?'✅ Available':'🔴 Hidden'}</span></td><td><div class="action-btns"><button class="edit-btn" onclick="editBook(${book.id})">✏️ Edit</button><button class="toggle-btn ${isAvail?'toggle-on':'toggle-off'}" onclick="toggleAvail(${book.id},${isAvail?0:1},this)">${isAvail?'🔴 Hide':'🟢 Show'}</button><button class="del-btn" onclick="deleteBook(${book.id})">🗑️ Delete</button></div></td></tr>`;
+    });
+}
+
+function filterBooks(q){let filtered=allBooksData.filter(b=>b.name.toLowerCase().includes(q.toLowerCase())||(b.category&&b.category.toLowerCase().includes(q.toLowerCase())));renderBooksTable(filtered);}
+
+function toggleForm(){let form=document.getElementById("bookForm");form.classList.toggle("open");if(!form.classList.contains("open"))clearForm();}
+
+function clearForm(){
+    document.getElementById("editBookId").value="";document.getElementById("bookName").value="";
+    document.getElementById("bookAuthor").value="";document.getElementById("bookPrice").value="";
+    document.getElementById("bookCategory").value="";document.getElementById("bookImage").value="";
+    document.getElementById("bookDescription").value="";document.getElementById("formTitle").innerText="➕ Add New Book";
+    document.getElementById("formMsg").innerText="";
+}
+
+function editBook(id){
+    let book=allBooksData.find(b=>b.id===id);if(!book)return;
+    let form=document.getElementById("bookForm");form.classList.add("open");form.scrollIntoView({behavior:"smooth"});
+    document.getElementById("editBookId").value=book.id;document.getElementById("bookName").value=book.name;
+    document.getElementById("bookAuthor").value=book.author||"";document.getElementById("bookPrice").value=book.price;
+    document.getElementById("bookCategory").value=book.category||"";document.getElementById("bookImage").value=book.image||"";
+    document.getElementById("bookDescription").value=book.description||"";document.getElementById("formTitle").innerText="✏️ Edit Book";
+}
+
+async function saveBook(){
+    let id=document.getElementById("editBookId").value;
+    let name=document.getElementById("bookName").value.trim();
+    let author=document.getElementById("bookAuthor").value.trim();
+    let price=document.getElementById("bookPrice").value.trim();
+    let category=document.getElementById("bookCategory").value;
+    let image=document.getElementById("bookImage").value.trim();
+    let description=document.getElementById("bookDescription").value.trim();
+    let msg=document.getElementById("formMsg");
+    if(!name||!price||!category){msg.innerText="❌ Name, price and category required!";msg.style.color="red";return;}
+    try{
+        let url=id?`http://127.0.0.1:5000/update-book/${id}`:"http://127.0.0.1:5000/add-book";
+        let method=id?"PUT":"POST";
+        const res=await fetch(url,{method,headers:{"Content-Type":"application/json"},body:JSON.stringify({name,author,price,category,image,description})});
+        const result=await res.json();
+        if(result.error){msg.innerText="❌ "+result.error;msg.style.color="red";return;}
+        msg.innerText=id?"✅ Book updated!":"✅ Book added!";msg.style.color="green";
+        clearForm();document.getElementById("bookForm").classList.remove("open");
+        try{await loadBooksData();renderBooksTable(allBooksData);renderDashboard();}catch(e){}
+    }catch(err){msg.innerText="❌ Cannot connect to Flask! Is it running?";msg.style.color="red";}
+}
+
+async function deleteBook(id){
+    if(!confirm("🗑️ Delete this book?"))return;
+    try{await fetch(`http://127.0.0.1:5000/delete-book/${id}`,{method:"DELETE"});await loadBooksData();renderBooksTable(allBooksData);renderDashboard();}
+    catch(err){alert("❌ Server error!");}
+}
+
+async function toggleAvail(id,newVal,btn){
+    try{await fetch(`http://127.0.0.1:5000/update-availability/${id}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({available:newVal})});await loadBooksData();renderBooksTable(allBooksData);}
+    catch(err){alert("❌ Server error!");}
+}
+
+function renderOrdersTable(orders){
+    let tbody=document.getElementById("ordersTableBody");
+    if(!orders||orders.length===0){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:#999;">No orders yet</td></tr>';return;}
+    tbody.innerHTML="";
+    let sorted=[...orders].sort((a,b)=>b.id-a.id);
+    sorted.forEach(o=>{
+        let badgeCls=getBadgeClass(o.status);
+        tbody.innerHTML+=`<tr><td><b>#${o.id}</b></td><td><div style="font-weight:600;color:#1a1a2e;">${o.customer_name||o.username||"—"}</div><div style="font-size:11px;color:#999;">@${o.username||"—"}</div></td><td>${o.phone||"—"}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;">${o.items||"—"}</td><td class="price-tag">₹${parseFloat(o.total||0).toFixed(2)}</td><td style="font-size:12px;">${o.payment_method||"COD"}</td><td><span class="badge ${badgeCls}">${o.status||"Order Placed"}</span></td><td><select class="status-select" onchange="updateStatus(${o.id},this.value)"><option value="Order Placed" ${o.status==="Order Placed"?"selected":""}>📋 Order Placed</option><option value="Packed" ${o.status==="Packed"?"selected":""}>📦 Packed</option><option value="Shipped" ${o.status==="Shipped"?"selected":""}>🚚 Shipped</option><option value="Out for Delivery" ${o.status==="Out for Delivery"?"selected":""}>🛵 Out for Delivery</option><option value="Delivered" ${o.status==="Delivered"?"selected":""}>✅ Delivered</option></select></td></tr>`;
+    });
+}
+
+function filterOrdersAdmin(q){let filtered=allOrdersData.filter(o=>(o.customer_name||"").toLowerCase().includes(q.toLowerCase())||(o.username||"").toLowerCase().includes(q.toLowerCase()));renderOrdersTable(filtered);}
+
+async function updateStatus(id,status){
+    try{await fetch(`http://127.0.0.1:5000/update-status/${id}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({status})});await loadOrdersData();renderOrdersTable(allOrdersData);renderDashboard();}
+    catch(err){alert("❌ Server error!");}
+}
+
+function renderUsersTable(users){
+    let tbody=document.getElementById("usersTableBody");
+    if(!users||users.length===0){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px;color:#999;">No users yet</td></tr>';return;}
+    tbody.innerHTML="";
+    users.forEach((u,i)=>{
+        let orderCount=allOrdersData.filter(o=>o.username===u.username).length;
+        tbody.innerHTML+=`<tr><td>${i+1}</td><td><div class="user-avatar">👤</div></td><td><div style="font-weight:600;color:#1a1a2e;">${u.username}</div></td><td style="color:#666;font-size:13px;">${u.email||"Not provided"}</td><td><span style="background:#e3f2fd;color:#1565c0;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">📦 ${orderCount} orders</span></td></tr>`;
+    });
+}
+
+function filterUsers(q){let filtered=allUsersData.filter(u=>u.username.toLowerCase().includes(q.toLowerCase())||(u.email||"").toLowerCase().includes(q.toLowerCase()));renderUsersTable(filtered);}
+
+async function loadBooks(){await loadBooksData();renderBooksTable(allBooksData);}
+async function loadOrders(){await loadOrdersData();renderOrdersTable(allOrdersData);}
+async function loadUsers(){await loadUsersData();renderUsersTable(allUsersData);}
+
+function getBadgeClass(status){
+    return status==="Order Placed"?"badge-placed":status==="Packed"?"badge-packed":status==="Shipped"?"badge-shipped":status==="Out for Delivery"?"badge-out":status==="Delivered"?"badge-delivered":"badge-placed";
+}
+</script>
+</body>
+</html>
