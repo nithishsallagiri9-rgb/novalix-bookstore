@@ -1,4 +1,4 @@
-# 📚 Novalix — Online Book Store
+<img width="1920" height="1020" alt="Screenshot 2026-05-27 225518" src="https://github.com/user-attachments/assets/ce99e3f5-29bf-4e7e-996d-84897851b391" /># 📚 Novalix — Online Book Store
 
 A full-stack e-commerce web application for browsing and purchasing books online.
 
@@ -33,9 +33,6 @@ A full-stack e-commerce web application for browsing and purchasing books online
 3. Run the backend
    python app.py
 4. Open index.html in your browser
-
-## 📸 Screenshots
-(Add screenshots of your project here)
 
 ## 👤 Author
 Nithish Sallagiri — BSc IT, Mumbai
