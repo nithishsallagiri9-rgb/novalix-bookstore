@@ -1,5 +1,4 @@
 Flask
-gunicorn
+Flask-Cors
 mysql-connector-python
-python-dotenv
- Copy packages
+gunicorn
