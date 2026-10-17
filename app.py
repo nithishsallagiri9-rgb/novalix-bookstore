@@ -1,12 +1,18 @@
-from flask import Flask, request, jsonify
+import os
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import mysql.connector
 import hmac, hashlib
-import os
 
 app = Flask(__name__)
 CORS(app, origins="*")
 
+# Serve homepage
+@app.route("/")
+def serve_index():
+    return send_from_directory(app.root_path, "index.html")
+
+# Database connection
 def get_db():
     return mysql.connector.connect(
         host=os.getenv("MYSQL_HOST"),
